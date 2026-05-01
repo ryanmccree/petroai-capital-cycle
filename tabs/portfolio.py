@@ -31,12 +31,14 @@ def _fmt_chg(val: float) -> str:
 
 def _sparkline_fig(series) -> go.Figure:
     color = "#4ade80" if series.iloc[-1] >= series.iloc[0] else "#f87171"
+    r, g, b = int(color[1:3], 16), int(color[3:5], 16), int(color[5:7], 16)
+    fill_color = f"rgba({r},{g},{b},0.10)"
     fig = go.Figure(go.Scatter(
         y=series.tolist(),
         mode="lines",
         line=dict(color=color, width=1.5),
         fill="tozeroy",
-         fillcolor="rgba(100,180,100,0.10)",
+        fillcolor=fill_color,
     ))
     fig.update_layout(
         margin=dict(l=0, r=0, t=0, b=0),
