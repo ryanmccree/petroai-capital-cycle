@@ -253,6 +253,60 @@ def _render_circular_flow():
     return fig
 
 
+def _render_heatmap():
+    """Render the 8 stages as a 4×2 colored heatmap grid."""
+    active = st.session_state.current_stage
+    intensities = st.session_state.get("constraint_intensities", {})
+
+    cols = st.columns(4)
+    for i, stage in enumerate(STAGES):
+        intensity = intensities.get(stage, 50)
+        t = intensity / 100.0
+
+        # Interpolate dark green (#0f1a0f) → bright amber (#f0a500)
+        r = int(15 + 225 * t)
+        g = int(26 + 139 * t)
+        b = int(15 * (1 - t))
+        tile_bg = f"rgb({r},{g},{b})"
+
+        is_active = (stage == active)
+        border_css = (
+            "border:2px solid #f0a500;box-shadow:0 0 14px 4px rgba(240,165,0,0.55);"
+            if is_active else "border:1px solid #2a5e2a;"
+        )
+
+        companies = _companies_for_stage(stage)
+        pill_html = "".join(
+            f"<span style='background:#0a0e0a;color:#90c890;border-radius:3px;"
+            f"padding:1px 5px;font-size:0.58rem;margin:1px 2px;display:inline-block;'>{tk}</span>"
+            for tk in companies[:6]
+        ) or "<span style='font-size:0.6rem;opacity:0.35;color:#c8d8c0;'>—</span>"
+
+        text_color = "#0a0e0a" if intensity > 65 else "#c8d8c0"
+        pct_color = "#f0a500" if is_active else ("#0a0e0a" if intensity > 65 else "#4ade80")
+        active_badge = (
+            "<div style='position:absolute;top:7px;right:9px;font-size:0.55rem;"
+            "color:#f0a500;font-weight:700;letter-spacing:0.07em;'>▲ ACTIVE</div>"
+            if is_active else ""
+        )
+
+        html = f"""
+        <div style="background:{tile_bg};{border_css}border-radius:8px;padding:14px 12px;
+                    margin:0 0 8px 0;min-height:130px;position:relative;">
+            {active_badge}
+            <div style="font-size:0.72rem;font-weight:700;color:{text_color};
+                        font-family:'IBM Plex Mono',monospace;margin-bottom:6px;">{stage}</div>
+            <div style="font-size:1.7rem;font-weight:700;color:{pct_color};
+                        font-family:'IBM Plex Mono',monospace;line-height:1;">{intensity}%</div>
+            <div style="font-size:0.55rem;color:{text_color};opacity:0.65;margin-bottom:8px;">
+                constraint intensity</div>
+            <div>{pill_html}</div>
+        </div>
+        """
+        with cols[i % 4]:
+            st.markdown(html, unsafe_allow_html=True)
+
+
 def render_cycle_viz(test_mode: bool):
     """Main entry point for the Cycle Visualization tab."""
 
@@ -273,9 +327,11 @@ def render_cycle_viz(test_mode: bool):
     if viz_mode == "Horizontal Flow":
         fig = _render_horizontal_flow()
         st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
-    else:
+    elif viz_mode == "Circular":
         fig = _render_circular_flow()
         st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
+    else:
+        _render_heatmap()
 
     st.markdown("<div style='height:8px;'></div>", unsafe_allow_html=True)
 

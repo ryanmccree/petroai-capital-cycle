@@ -88,7 +88,7 @@ with st.sidebar:
     st.markdown("**View Mode**")
     st.session_state.viz_mode = st.radio(
         "Cycle diagram style",
-        ["Horizontal Flow", "Circular"],
+        ["Horizontal Flow", "Circular", "Heatmap"],
         index=0,
         key="viz_mode_radio",
     )
