@@ -304,7 +304,7 @@ def _render_heatmap():
         </div>
         """
         with cols[i % 4]:
-            st.markdown(html, unsafe_allow_html=True)
+            st.markdown(html.strip(), unsafe_allow_html=True)
 
 
 def render_cycle_viz(test_mode: bool):
