@@ -24,7 +24,7 @@ def _price_chart(ticker: str, series, test_mode: bool) -> go.Figure:
     xs = list(range(n))
 
     color_line = "#4ade80" if prices[-1] >= prices[0] else "#f87171"
-    fill_color = "#4ade8022" if prices[-1] >= prices[0] else "#f8717122"
+    fill_color = "rgba(122,184,122,0.08)" if prices[-1] >= prices[0] else "rgba(200,64,64,0.08)"
 
     # Fake volume for test mode
     rng = np.random.default_rng(seed=abs(hash(ticker)) % (2**31))
