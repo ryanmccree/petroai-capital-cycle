@@ -122,6 +122,6 @@ with tab5:
 
 # ─── FOOTER ───────────────────────────────────────────────────────────────────
 st.markdown(
-    "<div class='footer'>Built to monitor @mikalche's PetroAI Capital Cycle Thesis • Not financial advice</div>",
+    "<div class='footer'>Built by R.McCree to monitor @mikalche's PetroAI Capital Cycle Thesis • Not financial advice</div>",
     unsafe_allow_html=True,
 )
