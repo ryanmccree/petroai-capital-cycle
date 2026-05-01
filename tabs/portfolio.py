@@ -36,7 +36,7 @@ def _sparkline_fig(series) -> go.Figure:
         mode="lines",
         line=dict(color=color, width=1.5),
         fill="tozeroy",
-        fillcolor=color.replace(")", ", 0.12)").replace("rgb", "rgba") if "rgb" in color else color + "22",
+         fillcolor="rgba(100,180,100,0.10)",
     ))
     fig.update_layout(
         margin=dict(l=0, r=0, t=0, b=0),
