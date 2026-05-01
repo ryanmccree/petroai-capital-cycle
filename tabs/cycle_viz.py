@@ -55,7 +55,7 @@ def _render_horizontal_flow():
         paper_bgcolor=BG,
         plot_bgcolor=BG,
         margin=dict(l=10, r=10, t=20, b=10),
-        height=280,
+        height=180,
         xaxis=dict(visible=False, range=[-0.5, STEP * n]),
         yaxis=dict(visible=False, range=[-1.1, 1.6]),
         showlegend=False,
@@ -325,8 +325,10 @@ def render_cycle_viz(test_mode: bool):
     viz_mode = st.session_state.get("viz_mode", "Horizontal Flow")
 
     if viz_mode == "Horizontal Flow":
+        st.markdown("<div class='flow-scroll-container'>", unsafe_allow_html=True)
         fig = _render_horizontal_flow()
         st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
+        st.markdown("</div>", unsafe_allow_html=True)
     elif viz_mode == "Circular":
         fig = _render_circular_flow()
         st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})

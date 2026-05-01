@@ -73,23 +73,22 @@ def render_portfolio(test_mode: bool):
 
     top_stage = max(stage_counts, key=stage_counts.get) if stage_counts else "—"
 
-    sm1, sm2, sm3, sm4 = st.columns(4)
-    for col, label, val in [
-        (sm1, "Total Positions", str(total)),
-        (sm2, "Active Stages", str(len(stage_counts))),
-        (sm3, "Heaviest Stage", top_stage.split(" ", 1)[-1] if " " in top_stage else top_stage),
-        (sm4, "Active Constraint", active.split(" ", 1)[-1] if " " in active else active),
-    ]:
-        with col:
-            st.markdown(
-                f"<div style='background:#0f1a0f; border:1px solid #1a2e1a; border-radius:6px;"
-                f" padding:10px 14px; text-align:center;'>"
-                f"<div style='font-size:0.65rem; color:#4a6e4a; text-transform:uppercase;"
-                f" letter-spacing:0.08em;'>{label}</div>"
-                f"<div style='font-size:1.3rem; font-weight:700; color:#f0a500; margin-top:4px;'>{val}</div>"
-                f"</div>",
-                unsafe_allow_html=True,
-            )
+    stat_items = [
+        ("Total Positions",  str(total)),
+        ("Active Stages",    str(len(stage_counts))),
+        ("Heaviest Stage",   top_stage.split(" ", 1)[-1] if " " in top_stage else top_stage),
+        ("Active Constraint", active.split(" ", 1)[-1] if " " in active else active),
+    ]
+    stat_cards = "".join(
+        f"<div style='background:#0f1a0f;border:1px solid #1a2e1a;border-radius:6px;"
+        f"padding:10px 14px;text-align:center;'>"
+        f"<div style='font-size:0.65rem;color:#4a6e4a;text-transform:uppercase;"
+        f"letter-spacing:0.08em;'>{label}</div>"
+        f"<div style='font-size:1.3rem;font-weight:700;color:#f0a500;margin-top:4px;'>{val}</div>"
+        f"</div>"
+        for label, val in stat_items
+    )
+    st.markdown(f"<div class='stat-grid'>{stat_cards}</div>", unsafe_allow_html=True)
 
     st.markdown("<div style='height:16px;'></div>", unsafe_allow_html=True)
 

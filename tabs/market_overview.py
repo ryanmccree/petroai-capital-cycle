@@ -164,6 +164,7 @@ def render_market_overview(test_mode: bool):
     st.markdown("<div style='height:12px;'></div>", unsafe_allow_html=True)
 
     # ── Stage ranking table ──────────────────────────────────────────────────
+    # CSS grid collapses to single column on mobile via theme.py media queries
     left_col, right_col = st.columns([1, 1])
 
     with left_col:

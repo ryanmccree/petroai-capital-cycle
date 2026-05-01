@@ -172,6 +172,80 @@ def inject_css():
         [data-testid="stRadio"] label {
             color: #a8b8a0 !important;
         }
+
+        /* ── Responsive stat grid (portfolio summary) ── */
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        /* ── Stage breakdown cards (cycle viz) ── */
+        /* col_count=4 in Python; CSS overrides to 2 on mobile */
+
+        /* ── Horizontal flow scroll wrapper ── */
+        .flow-scroll-container {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* ══════════════════════════════════════════════════════
+           MOBILE  (<768px)
+           Streamlit shows its native hamburger menu for the
+           sidebar — we do not hide it ourselves so the toggle
+           keeps working.
+        ══════════════════════════════════════════════════════ */
+        @media screen and (max-width: 768px) {
+
+            /* — Font size reductions — */
+            .header-title  { font-size: 1.1rem  !important; }
+            .header-thesis { font-size: 0.62rem !important; }
+            .stage-card    { font-size: 0.7rem  !important; }
+            .stage-name    { font-size: 0.75rem !important; }
+            .company-pill  { font-size: 0.58rem !important; padding: 1px 5px !important; }
+            .footer        { font-size: 0.58rem !important; }
+
+            /* — Stack all st.columns() blocks to single column — */
+            [data-testid="stHorizontalBlock"] {
+                flex-wrap: wrap !important;
+            }
+            [data-testid="stHorizontalBlock"] > [data-testid="column"] {
+                flex: 1 1 100% !important;
+                min-width: 100% !important;
+                width: 100% !important;
+            }
+
+            /* — Stat grid: 2 columns on mobile — */
+            .stat-grid { grid-template-columns: repeat(2, 1fr) !important; }
+
+            /* — Horizontal flow: allow horizontal scroll — */
+            .flow-scroll-container {
+                overflow-x: auto !important;
+                -webkit-overflow-scrolling: touch !important;
+            }
+            .flow-scroll-container [data-testid="stPlotlyChart"] .js-plotly-plot {
+                min-width: 700px;
+            }
+        }
+
+        /* ══════════════════════════════════════════════════════
+           TABLET  (480px – 767px): 2-column for wider grids
+        ══════════════════════════════════════════════════════ */
+        @media screen and (min-width: 480px) and (max-width: 767px) {
+            [data-testid="stHorizontalBlock"] > [data-testid="column"] {
+                flex: 1 1 48% !important;
+                min-width: 48% !important;
+            }
+            .stat-grid { grid-template-columns: repeat(2, 1fr) !important; }
+        }
+
+        /* ══════════════════════════════════════════════════════
+           SMALL MOBILE  (<480px): true single column
+        ══════════════════════════════════════════════════════ */
+        @media screen and (max-width: 479px) {
+            .stat-grid { grid-template-columns: 1fr !important; }
+        }
         </style>
         <!-- Google Font -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
