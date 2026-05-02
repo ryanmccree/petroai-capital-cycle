@@ -43,9 +43,9 @@ def _render_horizontal_flow():
     n = len(STAGES)
     fig = go.Figure()
 
-    # Layout constants
-    BOX_W, BOX_H = 1.6, 1.0
-    GAP = 0.5
+    # Layout constants — larger boxes with better spacing
+    BOX_W, BOX_H = 2.0, 1.2
+    GAP = 0.65
     STEP = BOX_W + GAP
     Y_CENTER = 0
     ARROW_Y = Y_CENTER
@@ -54,10 +54,10 @@ def _render_horizontal_flow():
     fig.update_layout(
         paper_bgcolor=BG,
         plot_bgcolor=BG,
-        margin=dict(l=10, r=10, t=20, b=10),
-        height=180,
-        xaxis=dict(visible=False, range=[-0.5, STEP * n]),
-        yaxis=dict(visible=False, range=[-1.1, 1.6]),
+        margin=dict(l=10, r=10, t=36, b=48),
+        height=320,
+        xaxis=dict(visible=False, range=[-0.4, STEP * n]),
+        yaxis=dict(visible=False, range=[-1.3, 1.6]),
         showlegend=False,
     )
 
@@ -78,70 +78,68 @@ def _render_horizontal_flow():
             fillcolor=ACTIVE_BG if is_active else NODE_BASE,
             line=dict(
                 color=ACTIVE_BRD if is_active else NODE_BORDER,
-                width=2.5 if is_active else 1,
+                width=2.5 if is_active else 1.2,
             ),
         )
 
-        # Glow effect for active node (second rect, transparent)
+        # Glow effect for active node
         if is_active:
             fig.add_shape(
                 type="rect",
-                x0=x0-0.06, y0=Y_CENTER - BOX_H/2 - 0.06,
-                x1=x1+0.06, y1=Y_CENTER + BOX_H/2 + 0.06,
+                x0=x0-0.08, y0=Y_CENTER - BOX_H/2 - 0.08,
+                x1=x1+0.08, y1=Y_CENTER + BOX_H/2 + 0.08,
                 fillcolor="rgba(0,0,0,0)",
-                line=dict(color=GLOW_COLOR, width=6),
+                line=dict(color=GLOW_COLOR, width=8),
             )
 
         # Stage emoji + name
-        label = stage  # includes emoji
         fig.add_annotation(
-            x=xc, y=LABEL_Y + 0.18,
-            text=f"<b>{label}</b>",
+            x=xc, y=LABEL_Y + 0.22,
+            text=f"<b>{stage}</b>",
             showarrow=False,
-            font=dict(size=10, color=ACTIVE_TXT if is_active else NODE_TEXT, family="IBM Plex Mono"),
+            font=dict(size=12, color=ACTIVE_TXT if is_active else NODE_TEXT, family="IBM Plex Mono"),
             xanchor="center",
         )
 
         # Companies pills text
         if pill_text:
             fig.add_annotation(
-                x=xc, y=LABEL_Y - 0.2,
+                x=xc, y=LABEL_Y - 0.28,
                 text=pill_text,
                 showarrow=False,
-                font=dict(size=8, color=ACTIVE_PILL_TXT if is_active else PILL_TXT, family="IBM Plex Mono"),
+                font=dict(size=9, color=ACTIVE_PILL_TXT if is_active else PILL_TXT, family="IBM Plex Mono"),
                 xanchor="center",
             )
 
-        # Description (tiny, below box)
+        # Description below box
         desc = STAGE_DESCRIPTIONS.get(stage, "")
-        short_desc = desc[:38] + "…" if len(desc) > 38 else desc
+        short_desc = desc[:42] + "…" if len(desc) > 42 else desc
         fig.add_annotation(
-            x=xc, y=Y_CENTER - BOX_H/2 - 0.2,
+            x=xc, y=Y_CENTER - BOX_H/2 - 0.28,
             text=short_desc,
             showarrow=False,
-            font=dict(size=7, color="#3a6e3a", family="IBM Plex Mono"),
+            font=dict(size=8, color="#3a6e3a", family="IBM Plex Mono"),
             xanchor="center",
         )
 
         # Arrow to next stage
         if i < n - 1:
             ax = x1 + GAP/2
-            is_active_arrow = (stage == active)
             fig.add_annotation(
                 x=ax, y=ARROW_Y,
                 text="→",
                 showarrow=False,
-                font=dict(size=16, color=ARROW_ACTV if is_active_arrow else ARROW_CLR),
+                font=dict(size=20, color=ARROW_ACTV if is_active else ARROW_CLR),
                 xanchor="center",
             )
 
-        # Active constraint badge
+        # Active constraint badge above box
         if is_active:
             fig.add_annotation(
-                x=xc, y=Y_CENTER + BOX_H/2 + 0.22,
+                x=xc, y=Y_CENTER + BOX_H/2 + 0.28,
                 text="▲ ACTIVE CONSTRAINT",
                 showarrow=False,
-                font=dict(size=7.5, color=ACTIVE_BRD, family="IBM Plex Mono"),
+                font=dict(size=8.5, color=ACTIVE_BRD, family="IBM Plex Mono"),
                 xanchor="center",
             )
 
@@ -157,16 +155,16 @@ def _render_circular_flow():
     fig.update_layout(
         paper_bgcolor=BG,
         plot_bgcolor=BG,
-        margin=dict(l=20, r=20, t=20, b=20),
-        height=480,
-        xaxis=dict(visible=False, range=[-2.2, 2.2]),
-        yaxis=dict(visible=False, range=[-2.2, 2.2], scaleanchor="x"),
+        margin=dict(l=30, r=30, t=30, b=30),
+        height=600,
+        xaxis=dict(visible=False, range=[-2.3, 2.3]),
+        yaxis=dict(visible=False, range=[-2.3, 2.3], scaleanchor="x"),
         showlegend=False,
     )
 
-    R = 1.55      # node center radius
-    BOX_W = 0.7
-    BOX_H = 0.38
+    R = 1.58      # node center radius
+    BOX_W = 0.85
+    BOX_H = 0.50
 
     # Draw outer ring circle
     theta_ring = [i * 2 * math.pi / 360 for i in range(361)]
@@ -205,18 +203,18 @@ def _render_circular_flow():
             )
 
         fig.add_annotation(
-            x=cx, y=cy + 0.05,
+            x=cx, y=cy + 0.08,
             text=f"<b>{stage}</b>",
             showarrow=False,
-            font=dict(size=9, color=ACTIVE_TXT if is_active else NODE_TEXT, family="IBM Plex Mono"),
+            font=dict(size=10, color=ACTIVE_TXT if is_active else NODE_TEXT, family="IBM Plex Mono"),
             xanchor="center",
         )
         if pill_txt:
             fig.add_annotation(
-                x=cx, y=cy - 0.1,
+                x=cx, y=cy - 0.13,
                 text=pill_txt,
                 showarrow=False,
-                font=dict(size=7.5, color=ACTIVE_PILL_TXT if is_active else PILL_TXT, family="IBM Plex Mono"),
+                font=dict(size=8.5, color=ACTIVE_PILL_TXT if is_active else PILL_TXT, family="IBM Plex Mono"),
                 xanchor="center",
             )
 
@@ -245,7 +243,7 @@ def _render_circular_flow():
         x=0, y=0,
         text="<b>PetroAI<br>Flywheel</b>",
         showarrow=False,
-        font=dict(size=11, color="#4a8e4a", family="IBM Plex Mono"),
+        font=dict(size=14, color="#4a8e4a", family="IBM Plex Mono"),
         xanchor="center",
         yanchor="middle",
     )
@@ -285,24 +283,24 @@ def _render_heatmap():
         text_color = "#0a0e0a" if intensity > 65 else "#c8d8c0"
         pct_color = "#f0a500" if is_active else ("#0a0e0a" if intensity > 65 else "#4ade80")
         active_badge = (
-            "<div style='position:absolute;top:7px;right:9px;font-size:0.55rem;"
+            "<div style='position:absolute;top:9px;right:11px;font-size:0.62rem;"
             "color:#f0a500;font-weight:700;letter-spacing:0.07em;'>▲ ACTIVE</div>"
             if is_active else ""
         )
 
-        html = f"""
-        <div style="background:{tile_bg};{border_css}border-radius:8px;padding:14px 12px;
-                    margin:0 0 8px 0;min-height:130px;position:relative;">
-            {active_badge}
-            <div style="font-size:0.72rem;font-weight:700;color:{text_color};
-                        font-family:'IBM Plex Mono',monospace;margin-bottom:6px;">{stage}</div>
-            <div style="font-size:1.7rem;font-weight:700;color:{pct_color};
-                        font-family:'IBM Plex Mono',monospace;line-height:1;">{intensity}%</div>
-            <div style="font-size:0.55rem;color:{text_color};opacity:0.65;margin-bottom:8px;">
-                constraint intensity</div>
-            <div>{pill_html}</div>
-        </div>
-        """
+        html = (
+            f"<div style='background:{tile_bg};{border_css}border-radius:10px;"
+            f"padding:20px 16px;margin:0 0 10px 0;min-height:160px;position:relative;'>"
+            f"{active_badge}"
+            f"<div style='font-size:0.82rem;font-weight:700;color:{text_color};"
+            f"font-family:IBM Plex Mono,monospace;margin-bottom:8px;'>{stage}</div>"
+            f"<div style='font-size:2rem;font-weight:700;color:{pct_color};"
+            f"font-family:IBM Plex Mono,monospace;line-height:1;'>{intensity}%</div>"
+            f"<div style='font-size:0.62rem;color:{text_color};opacity:0.65;"
+            f"margin-bottom:10px;'>constraint intensity</div>"
+            f"<div>{pill_html}</div>"
+            f"</div>"
+        )
         with cols[i % 4]:
             st.markdown(html.strip(), unsafe_allow_html=True)
 
@@ -313,10 +311,12 @@ def render_cycle_viz(test_mode: bool):
     active = st.session_state.current_stage
 
     st.markdown(
-        f"<div style='font-size:0.75rem; color:#4a8e4a; margin-bottom:0.75rem;'>"
+        f"<div style='font-size:0.82rem;color:#4a8e4a;margin-bottom:1.1rem;"
+        f"padding:10px 14px;background:#0d140d;border:1px solid #1a2e1a;"
+        f"border-left:3px solid #f0a500;border-radius:4px;'>"
         f"Active constraint: "
-        f"<span style='color:#f0a500; font-weight:700;'>{active}</span> — "
-        f"{STAGE_DESCRIPTIONS.get(active,'')}"
+        f"<span style='color:#f0a500;font-weight:700;'>{active}</span>"
+        f"<span style='color:#3a6e3a;'> — {STAGE_DESCRIPTIONS.get(active,'')}</span>"
         f"</div>",
         unsafe_allow_html=True,
     )
@@ -335,12 +335,11 @@ def render_cycle_viz(test_mode: bool):
     else:
         _render_heatmap()
 
-    st.markdown("<div style='height:8px;'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='height:20px;'></div>", unsafe_allow_html=True)
 
     # ── Stage breakdown cards ─────────────────────────────────────────────────
     st.markdown(
-        "<div style='font-size:0.7rem; color:#3a6e3a; letter-spacing:0.08em; "
-        "text-transform:uppercase; margin-bottom:0.5rem;'>Stage breakdown</div>",
+        "<div class='section-header'>Stage breakdown</div>",
         unsafe_allow_html=True,
     )
 
@@ -354,33 +353,34 @@ def render_cycle_viz(test_mode: bool):
         ) if companies else "<span style='color:#2a4e2a;font-size:0.65rem;'>—</span>"
 
         card_class = "stage-card active-constraint" if is_active else "stage-card"
-        html = f"""
-        <div class="{card_class}">
-            <div class="stage-name">{stage}</div>
-            <div class="stage-desc">{STAGE_DESCRIPTIONS.get(stage,'')}</div>
-            <div style="margin-top:6px;">{pills}</div>
-        </div>
-        """
+        html = (
+            f"<div class='{card_class}'>"
+            f"<div class='stage-name'>{stage}</div>"
+            f"<div class='stage-desc'>{STAGE_DESCRIPTIONS.get(stage,'')}</div>"
+            f"<div style='margin-top:8px;'>{pills}</div>"
+            f"</div>"
+        )
         with cols[i % col_count]:
             st.markdown(html, unsafe_allow_html=True)
 
     # ── Quick-set constraint shortcut ────────────────────────────────────────
-    st.markdown("<div style='height:12px;'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='height:20px;'></div>", unsafe_allow_html=True)
     st.markdown(
-        "<div style='font-size:0.7rem; color:#3a6e3a; letter-spacing:0.08em; "
-        "text-transform:uppercase; margin-bottom:0.5rem;'>Quick-set active constraint</div>",
+        "<div class='section-header'>Quick-set active constraint</div>",
         unsafe_allow_html=True,
     )
     btn_cols = st.columns(len(STAGES))
     for i, stage in enumerate(STAGES):
         is_active = (stage == active)
+        emoji = stage.split(" ")[0]
+        short = stage.split(" ", 1)[1] if " " in stage else stage
         with btn_cols[i]:
-            label = stage.split(" ")[0]  # just the emoji
             if st.button(
-                label,
+                f"{emoji}\n{short}",
                 key=f"qset_{i}",
                 help=stage,
                 type="primary" if is_active else "secondary",
+                use_container_width=True,
             ):
                 st.session_state.current_stage = stage
                 st.rerun()

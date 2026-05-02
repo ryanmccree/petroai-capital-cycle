@@ -85,41 +85,65 @@ def inject_css():
             border-bottom-color: #f0a500 !important;
         }
 
+        /* ── Sidebar ── */
+        [data-testid="stSidebar"] {
+            background-color: #0d140d !important;
+            border-right: 1px solid #1e3a1e !important;
+            min-width: 240px !important;
+        }
+        [data-testid="stSidebar"] * { color: #a8b8a0 !important; }
+        [data-testid="stSidebar"] h3 { color: #f0a500 !important; font-size: 1rem !important; }
+
+        /* ── Section headers ── */
+        .section-header {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: #4a8e4a;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 0.8rem;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #1a2e1a;
+        }
+
         /* ── Stage cards ── */
         .stage-card {
             background: #0f1a0f;
             border: 1px solid #1a2e1a;
-            border-radius: 6px;
-            padding: 10px 12px;
-            margin-bottom: 8px;
+            border-radius: 8px;
+            padding: 14px 16px;
+            margin-bottom: 10px;
             font-size: 0.78rem;
+            min-height: 110px;
         }
         .stage-card.active-constraint {
             border: 2px solid #f0a500;
-            box-shadow: 0 0 14px 2px rgba(240,165,0,0.35);
+            box-shadow: 0 0 18px 3px rgba(240,165,0,0.35);
             background: #1a1400;
         }
         .stage-name {
             font-weight: 700;
-            font-size: 0.85rem;
+            font-size: 0.92rem;
             color: #c8d8c0;
+            margin-bottom: 4px;
         }
         .stage-card.active-constraint .stage-name {
             color: #f0a500;
         }
         .stage-desc {
             color: #4a6e4a;
-            font-size: 0.68rem;
-            margin-top: 3px;
+            font-size: 0.72rem;
+            margin-top: 4px;
+            line-height: 1.45;
         }
         .company-pill {
             display: inline-block;
             background: #1a2e1a;
             color: #90c890;
-            font-size: 0.65rem;
-            padding: 2px 7px;
-            border-radius: 3px;
-            margin: 3px 3px 0 0;
+            font-size: 0.68rem;
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin: 4px 3px 0 0;
             border: 1px solid #2a4e2a;
             font-weight: 600;
         }
@@ -127,6 +151,28 @@ def inject_css():
             background: #2a1a00;
             color: #f0a500;
             border-color: #5a3a00;
+        }
+
+        /* ── Quick-set buttons ── */
+        [data-testid="stButton"] button {
+            font-family: 'IBM Plex Mono', monospace !important;
+            border-radius: 6px !important;
+            transition: all 0.15s ease !important;
+        }
+        [data-testid="stButton"] button[kind="secondary"] {
+            background-color: #0f1a0f !important;
+            border: 1px solid #2a5e2a !important;
+            color: #90c890 !important;
+        }
+        [data-testid="stButton"] button[kind="secondary"]:hover {
+            background-color: #1a2e1a !important;
+            border-color: #4a8e4a !important;
+        }
+        [data-testid="stButton"] button[kind="primary"] {
+            background-color: #2a1a00 !important;
+            border: 2px solid #f0a500 !important;
+            color: #f0a500 !important;
+            box-shadow: 0 0 10px rgba(240,165,0,0.4) !important;
         }
 
         /* ── Flow arrows ── */
@@ -201,12 +247,12 @@ def inject_css():
             /* — Font size reductions — */
             .header-title  { font-size: 1.1rem  !important; }
             .header-thesis { font-size: 0.62rem !important; }
-            .stage-card    { font-size: 0.7rem  !important; }
-            .stage-name    { font-size: 0.75rem !important; }
-            .company-pill  { font-size: 0.58rem !important; padding: 1px 5px !important; }
+            .stage-card    { font-size: 0.7rem  !important; min-height: 80px !important; }
+            .stage-name    { font-size: 0.78rem !important; }
+            .company-pill  { font-size: 0.58rem !important; padding: 2px 5px !important; }
             .footer        { font-size: 0.58rem !important; }
 
-            /* — Stack all st.columns() blocks to single column — */
+            /* — Stack most column blocks — */
             [data-testid="stHorizontalBlock"] {
                 flex-wrap: wrap !important;
             }
