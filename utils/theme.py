@@ -312,8 +312,6 @@ def inject_css():
             .stat-grid {{ grid-template-columns: 1fr !important; }}
         }}
         </style>
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;600;700&display=swap" rel="stylesheet">
         """,
         unsafe_allow_html=True,
     )

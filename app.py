@@ -38,7 +38,7 @@ inject_css()
 init_session_state()
 
 # ─── DYNAMIC STAGE BACKGROUND ─────────────────────────────────────────────────
-_STAGE_BG = {
+stage_bg_colors = {
     "⚡ Energy":      "#150e0a",
     "🔋 Power":       "#141200",
     "🔌 Grid":        "#081518",
@@ -48,13 +48,21 @@ _STAGE_BG = {
     "🛡️ Defense":     "#150808",
     "🌐 Sovereignty": "#141008",
 }
-_active_bg = _STAGE_BG.get(st.session_state.current_stage, "#0f1117")
-st.markdown(
-    f"<style>html,body,[data-testid='stAppViewContainer'],[data-testid='stMain'],"
-    f"[data-testid='block-container']{{background-color:{_active_bg}!important;"
-    f"transition:background-color 0.5s ease;}}</style>",
-    unsafe_allow_html=True,
-)
+current_bg = stage_bg_colors.get(st.session_state.current_stage, "#0f1117")
+st.markdown(f"""
+<style>
+.stApp {{
+    background-color: {current_bg} !important;
+    transition: background-color 0.5s ease;
+}}
+[data-testid="stAppViewContainer"] {{
+    background-color: {current_bg} !important;
+}}
+[data-testid="stHeader"] {{
+    background-color: {current_bg} !important;
+}}
+</style>
+""", unsafe_allow_html=True)
 # ──────────────────────────────────────────────────────────────────────────────
 
 # ─── HEADER ───────────────────────────────────────────────────────────────────
