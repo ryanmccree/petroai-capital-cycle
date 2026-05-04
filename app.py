@@ -37,6 +37,26 @@ st.set_page_config(
 inject_css()
 init_session_state()
 
+# ─── DYNAMIC STAGE BACKGROUND ─────────────────────────────────────────────────
+_STAGE_BG = {
+    "⚡ Energy":      "#150e0a",
+    "🔋 Power":       "#141200",
+    "🔌 Grid":        "#081518",
+    "💻 Compute":     "#0a0f18",
+    "🔁 Transfer":    "#081510",
+    "🤖 AI":          "#110a18",
+    "🛡️ Defense":     "#150808",
+    "🌐 Sovereignty": "#141008",
+}
+_active_bg = _STAGE_BG.get(st.session_state.current_stage, "#0f1117")
+st.markdown(
+    f"<style>html,body,[data-testid='stAppViewContainer'],[data-testid='stMain'],"
+    f"[data-testid='block-container']{{background-color:{_active_bg}!important;"
+    f"transition:background-color 0.5s ease;}}</style>",
+    unsafe_allow_html=True,
+)
+# ──────────────────────────────────────────────────────────────────────────────
+
 # ─── HEADER ───────────────────────────────────────────────────────────────────
 from datetime import datetime
 

@@ -65,7 +65,7 @@ def inject_css():
             border-right: 1px solid var(--border) !important;
             min-width: 240px !important;
         }}
-        [data-testid="stSidebar"] * {{ color: var(--text-2) !important; }}
+        [data-testid="stSidebar"] * {{ color: var(--text-2) !important; font-size: 0.85rem; }}
         [data-testid="stSidebar"] h3 {{ color: #FF9500 !important; font-size: 1rem !important; }}
 
         /* ── Header ── */
@@ -79,7 +79,7 @@ def inject_css():
             font-family: 'DM Sans', sans-serif;
         }}
         .header-thesis {{
-            font-size: 0.72rem;
+            font-size: 0.82rem;
             line-height: 1.65;
             color: var(--text-2);
             max-width: 900px;
@@ -117,7 +117,7 @@ def inject_css():
         /* ── Tabs ── */
         [data-testid="stTabs"] button {{
             color: var(--text-3) !important;
-            font-size: 0.8rem !important;
+            font-size: 0.9rem !important;
             font-family: 'DM Sans', sans-serif !important;
             transition: color var(--ease) !important;
         }}
@@ -128,7 +128,7 @@ def inject_css():
 
         /* ── Section headers ── */
         .section-header {{
-            font-size: 0.72rem;
+            font-size: 0.75rem;
             font-weight: 600;
             color: var(--text-2);
             letter-spacing: 0.14em;
@@ -146,7 +146,7 @@ def inject_css():
             border-radius: 12px;
             padding: 16px;
             margin-bottom: 10px;
-            font-size: 0.78rem;
+            font-size: 0.9rem;
             min-height: 110px;
             transition: all var(--ease);
             box-shadow: 0 2px 8px rgba(0,0,0,0.25);
@@ -162,7 +162,7 @@ def inject_css():
         }}
         .stage-name {{
             font-weight: 700;
-            font-size: 0.92rem;
+            font-size: 1.1rem;
             color: var(--text-1);
             margin-bottom: 4px;
             font-family: 'DM Sans', sans-serif;
@@ -170,7 +170,7 @@ def inject_css():
         .stage-card.active-constraint .stage-name {{ color: #FF9500; }}
         .stage-desc {{
             color: var(--text-2);
-            font-size: 0.7rem;
+            font-size: 0.82rem;
             margin-top: 4px;
             line-height: 1.45;
             font-family: 'IBM Plex Mono', monospace;
@@ -179,7 +179,7 @@ def inject_css():
             display: inline-block;
             background: rgba(255,255,255,0.06);
             color: var(--text-2);
-            font-size: 0.65rem;
+            font-size: 0.8rem;
             padding: 3px 8px;
             border-radius: 4px;
             margin: 4px 3px 0 0;
