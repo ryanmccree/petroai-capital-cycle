@@ -51,6 +51,39 @@ STAGE_DESCRIPTIONS = {
     "🌐 Sovereignty":  "Control critical inputs — minerals, chips, data, energy independence",
 }
 
+STAGE_COLORS = {
+    "⚡ Energy":      "#FF6B2B",
+    "🔋 Power":       "#FFD700",
+    "🔌 Grid":        "#00D4FF",
+    "💻 Compute":     "#4D9FFF",
+    "🔁 Transfer":    "#00FF94",
+    "🤖 AI":          "#B44DFF",
+    "🛡️ Defense":     "#FF3B3B",
+    "🌐 Sovereignty": "#FF9500",
+}
+
+STAGE_CSS_KEYS = {
+    "⚡ Energy":      "energy",
+    "🔋 Power":       "power",
+    "🔌 Grid":        "grid",
+    "💻 Compute":     "compute",
+    "🔁 Transfer":    "transfer",
+    "🤖 AI":          "ai",
+    "🛡️ Defense":     "defense",
+    "🌐 Sovereignty": "sovereignty",
+}
+
+STAGE_IMAGES = {
+    "⚡ Energy":      "https://images.unsplash.com/photo-1466611653911-95081537e5b7?w=800&q=80",
+    "🔋 Power":       "https://images.unsplash.com/photo-1548337138-e87d889cc369?w=800&q=80",
+    "🔌 Grid":        "https://images.unsplash.com/photo-1544724569-5f546fd6f2b5?w=800&q=80",
+    "💻 Compute":     "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80",
+    "🔁 Transfer":    "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=80",
+    "🤖 AI":          "https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=800&q=80",
+    "🛡️ Defense":     "https://images.unsplash.com/photo-1521694468822-1e20e3f1b68e?w=800&q=80",
+    "🌐 Sovereignty": "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&q=80",
+}
+
 
 def init_session_state():
     """Initialize all session state keys with defaults. Safe to call on every run."""

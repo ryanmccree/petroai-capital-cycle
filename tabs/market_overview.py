@@ -11,7 +11,7 @@ Tab 5: Market Overview
 import streamlit as st
 import plotly.graph_objects as go
 
-from utils.state import STAGES, STAGE_DESCRIPTIONS
+from utils.state import STAGES, STAGE_DESCRIPTIONS, STAGE_COLORS
 from utils.data import get_quote
 
 
@@ -73,51 +73,41 @@ def _heatmap_fig(stats: dict, period: str) -> go.Figure:
     key = {"1D": "avg_1d", "5D": "avg_5d", "1M": "avg_1m"}[period]
     labels = [s.split(" ", 1)[-1] for s in STAGES]
     values = [stats[s][key] for s in STAGES]
-
-    # Color scale: red → green
-    colorscale = [
-        [0.0, "#3a0f0f"],
-        [0.4, "#1a0f0f"],
-        [0.5, "#0f1a0f"],
-        [0.7, "#153000"],
-        [1.0, "#1a3a00"],
-    ]
+    bar_colors = [STAGE_COLORS.get(s, "#4D9FFF") for s in STAGES]
 
     fig = go.Figure(go.Bar(
         x=labels,
         y=values,
         marker=dict(
-            color=values,
-            colorscale=colorscale,
-            cmin=-20,
-            cmax=20,
-            line=dict(color="#0a0e0a", width=1),
+            color=bar_colors,
+            opacity=0.85,
+            line=dict(color="#0f1117", width=1),
         ),
         text=[f"{'+'if v>=0 else''}{v:.1f}%" for v in values],
         textposition="outside",
-        textfont=dict(size=9, color="#7a9e7a", family="IBM Plex Mono"),
+        textfont=dict(size=9, color="#8b8fa8", family="IBM Plex Mono"),
     ))
 
     fig.update_layout(
-        paper_bgcolor="#0a0e0a",
-        plot_bgcolor="#0a0e0a",
-        margin=dict(l=10, r=10, t=30, b=10),
-        height=200,
+        paper_bgcolor="#0f1117",
+        plot_bgcolor="#0f1117",
+        margin=dict(l=10, r=10, t=36, b=10),
+        height=220,
         xaxis=dict(
-            tickfont=dict(size=9, color="#4a6e4a", family="IBM Plex Mono"),
-            gridcolor="#0f1a0f",
+            tickfont=dict(size=9, color="#8b8fa8", family="IBM Plex Mono"),
+            gridcolor="#1a1d27",
         ),
         yaxis=dict(
-            tickfont=dict(size=8, color="#2a5e2a", family="IBM Plex Mono"),
-            gridcolor="#0f1a0f",
+            tickfont=dict(size=8, color="#4a4e6a", family="IBM Plex Mono"),
+            gridcolor="#1a1d27",
             ticksuffix="%",
             zeroline=True,
-            zerolinecolor="#1a3e1a",
+            zerolinecolor="#2a2d3e",
             zerolinewidth=1,
         ),
         title=dict(
             text=f"Stage Avg Performance — {period}",
-            font=dict(size=10, color="#4a8e4a", family="IBM Plex Mono"),
+            font=dict(size=10, color="#8b8fa8", family="IBM Plex Mono"),
             x=0.01,
         ),
         showlegend=False,
@@ -180,22 +170,24 @@ def render_market_overview(test_mode: bool):
             s = stats[stage]
             val = s[key_map[period]]
             is_active = (stage == active)
-            color = _chg_color(val)
-            border = "#5a3a00" if is_active else "#1a2e1a"
-            bg     = "#1a1400" if is_active else "#0f1a0f"
+            chg_color = _chg_color(val)
+            sc = STAGE_COLORS.get(stage, "#8b8fa8")
 
             st.markdown(
-                f"<div style='background:{bg}; border:1px solid {border}; border-radius:4px;"
-                f" padding:7px 12px; margin-bottom:6px; display:flex; justify-content:space-between;"
-                f" align-items:center;'>"
-                f"<div>"
-                f"<span style='font-size:0.65rem; color:#2a5e2a; margin-right:8px;'>#{rank}</span>"
-                f"<span style='font-size:0.78rem; color:{'#f0a500' if is_active else '#c8d8c0'};"
-                f" font-weight:{'700' if is_active else '400'};'>{stage}</span>"
-                f"{'<span style=\"font-size:0.55rem; color:#f0a500; margin-left:6px;\">● ACTIVE</span>' if is_active else ''}"
+                f"<div style='background:#1a1d27;border:1px solid {'#2a2d3e' if not is_active else sc};"
+                f"border-left:3px solid {sc};"
+                f"border-radius:0 8px 8px 0;padding:8px 12px;margin-bottom:6px;"
+                f"display:flex;justify-content:space-between;align-items:center;"
+                f"box-shadow:{'0 0 12px ' + sc + '30' if is_active else 'none'};'>"
+                f"<div style='display:flex;align-items:center;gap:8px;'>"
+                f"<span style='font-size:0.62rem;color:#4a4e6a;font-family:IBM Plex Mono,monospace;'>#{rank}</span>"
+                f"<span style='width:8px;height:8px;border-radius:50%;background:{sc};"
+                f"display:inline-block;flex-shrink:0;'></span>"
+                f"<span style='font-size:0.78rem;color:{'#ffffff' if is_active else '#8b8fa8'};"
+                f"font-weight:{'700' if is_active else '400'};'>{stage}</span>"
                 f"</div>"
-                f"<div style='font-size:0.82rem; font-weight:700; color:{color};'>"
-                f"{'+'if val>=0 else''}{val:.1f}%</div>"
+                f"<div style='font-size:0.84rem;font-weight:700;color:{chg_color};"
+                f"font-family:IBM Plex Mono,monospace;'>{'+'if val>=0 else''}{val:.1f}%</div>"
                 f"</div>",
                 unsafe_allow_html=True,
             )

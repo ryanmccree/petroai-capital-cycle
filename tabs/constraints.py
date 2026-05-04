@@ -12,19 +12,14 @@ import streamlit as st
 import plotly.graph_objects as go
 from datetime import datetime
 
-from utils.state import STAGES, STAGE_DESCRIPTIONS
+from utils.state import STAGES, STAGE_DESCRIPTIONS, STAGE_COLORS
 
-
-# ── Color helpers ──────────────────────────────────────────────────────────────
 
 def _intensity_color(val: int) -> str:
-    if val >= 80:
-        return "#f0a500"
-    if val >= 60:
-        return "#facc15"
-    if val >= 40:
-        return "#4ade80"
-    return "#2a5e2a"
+    if val >= 80: return "#FF6B2B"
+    if val >= 60: return "#FFD700"
+    if val >= 40: return "#4D9FFF"
+    return "#2a2d3e"
 
 
 def _intensity_label(val: int) -> str:
@@ -45,53 +40,49 @@ def _render_intensity_chart():
 
     labels = [s.split(" ", 1)[-1] for s in STAGES]
     values = [intensities.get(s, 50) for s in STAGES]
-    colors = [
-        "#f0a500" if s == active else _intensity_color(intensities.get(s, 50))
-        for s in STAGES
-    ]
+    colors = [STAGE_COLORS.get(s, "#4D9FFF") for s in STAGES]
 
     fig = go.Figure(go.Bar(
         x=labels,
         y=values,
         marker_color=colors,
-        marker_line_color="#0a0e0a",
+        marker_line_color="#0f1117",
         marker_line_width=1,
         text=[f"{v}" for v in values],
         textposition="outside",
-        textfont=dict(size=9, color="#7a9e7a", family="IBM Plex Mono"),
+        textfont=dict(size=9, color="#8b8fa8", family="IBM Plex Mono"),
     ))
 
     fig.update_layout(
-        paper_bgcolor="#0a0e0a",
-        plot_bgcolor="#0a0e0a",
-        margin=dict(l=10, r=10, t=30, b=10),
-        height=220,
+        paper_bgcolor="#0f1117",
+        plot_bgcolor="#0f1117",
+        margin=dict(l=10, r=10, t=36, b=10),
+        height=240,
         xaxis=dict(
-            tickfont=dict(size=9, color="#4a6e4a", family="IBM Plex Mono"),
-            gridcolor="#0f1a0f",
-            linecolor="#1a2e1a",
+            tickfont=dict(size=9, color="#8b8fa8", family="IBM Plex Mono"),
+            gridcolor="#1a1d27",
+            linecolor="#2a2d3e",
         ),
         yaxis=dict(
-            range=[0, 110],
-            tickfont=dict(size=8, color="#2a5e2a", family="IBM Plex Mono"),
-            gridcolor="#0f1a0f",
+            range=[0, 115],
+            tickfont=dict(size=8, color="#4a4e6a", family="IBM Plex Mono"),
+            gridcolor="#1a1d27",
             tickvals=[0, 25, 50, 75, 100],
         ),
         title=dict(
             text="Constraint Intensity by Stage",
-            font=dict(size=10, color="#4a8e4a", family="IBM Plex Mono"),
+            font=dict(size=10, color="#8b8fa8", family="IBM Plex Mono"),
             x=0.01,
         ),
         showlegend=False,
     )
 
-    # Active constraint reference line
-    fig.add_hline(y=80, line_dash="dot", line_color="#3a3a00", line_width=1)
+    fig.add_hline(y=80, line_dash="dot", line_color="#FF6B2B", line_width=1, opacity=0.4)
     fig.add_annotation(
-        x=len(STAGES) - 0.5, y=82,
+        x=len(STAGES) - 0.5, y=83,
         text="Critical threshold",
         showarrow=False,
-        font=dict(size=7, color="#3a3a00", family="IBM Plex Mono"),
+        font=dict(size=7, color="#FF6B2B", family="IBM Plex Mono"),
         xanchor="right",
     )
 
@@ -175,16 +166,17 @@ def render_constraints(test_mode: bool):
             date  = entry.get("date", "")
             stage = entry.get("stage", "")
             note  = entry.get("note", "")
-            is_active = (stage == active)
+            sc = STAGE_COLORS.get(stage, "#8b8fa8")
 
             st.markdown(
-                f"<div style='background:#0f1a0f; border-left:3px solid "
-                f"{'#f0a500' if is_active else '#1a2e1a'};"
-                f" padding:8px 10px; margin-bottom:8px; border-radius:0 4px 4px 0;'>"
-                f"<div style='font-size:0.65rem; color:#3a6e3a;'>{date}</div>"
-                f"<div style='font-size:0.75rem; color:{'#f0a500' if is_active else '#c8d8c0'};"
-                f" font-weight:700; margin:2px 0;'>{stage}</div>"
-                f"<div style='font-size:0.68rem; color:#4a6e4a; line-height:1.4;'>{note}</div>"
+                f"<div style='background:#1a1d27;border-left:3px solid {sc};"
+                f"padding:10px 12px;margin-bottom:8px;border-radius:0 8px 8px 0;"
+                f"box-shadow:0 2px 8px rgba(0,0,0,0.2);'>"
+                f"<div style='font-size:0.62rem;color:#4a4e6a;font-family:IBM Plex Mono,monospace;'>{date}</div>"
+                f"<div style='font-size:0.78rem;color:{sc};font-weight:700;margin:3px 0;"
+                f"font-family:DM Sans,sans-serif;'>{stage}</div>"
+                f"<div style='font-size:0.68rem;color:#8b8fa8;line-height:1.45;"
+                f"font-family:IBM Plex Mono,monospace;'>{note}</div>"
                 f"</div>",
                 unsafe_allow_html=True,
             )

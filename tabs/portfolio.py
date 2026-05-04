@@ -10,7 +10,7 @@ Tab 2: Portfolio Manager
 import streamlit as st
 import plotly.graph_objects as go
 
-from utils.state import STAGES, STAGE_DESCRIPTIONS
+from utils.state import STAGES, STAGE_DESCRIPTIONS, STAGE_COLORS
 from utils.data import get_quote, get_sparkline
 
 
@@ -58,7 +58,8 @@ def render_portfolio(test_mode: bool):
     active = st.session_state.current_stage
 
     st.markdown(
-        "<div style='font-size:0.75rem; color:#4a8e4a; margin-bottom:0.75rem;'>"
+        "<div style='font-size:0.78rem;color:#8b8fa8;margin-bottom:1rem;"
+        "font-family:IBM Plex Mono,monospace;'>"
         "Track every position in the capital cycle — price performance, stage allocation, and momentum."
         "</div>",
         unsafe_allow_html=True,
@@ -79,12 +80,15 @@ def render_portfolio(test_mode: bool):
         ("Heaviest Stage",   top_stage.split(" ", 1)[-1] if " " in top_stage else top_stage),
         ("Active Constraint", active.split(" ", 1)[-1] if " " in active else active),
     ]
+    active_color = STAGE_COLORS.get(active, "#FF9500")
     stat_cards = "".join(
-        f"<div style='background:#0f1a0f;border:1px solid #1a2e1a;border-radius:6px;"
-        f"padding:10px 14px;text-align:center;'>"
-        f"<div style='font-size:0.65rem;color:#4a6e4a;text-transform:uppercase;"
-        f"letter-spacing:0.08em;'>{label}</div>"
-        f"<div style='font-size:1.3rem;font-weight:700;color:#f0a500;margin-top:4px;'>{val}</div>"
+        f"<div style='background:#1a1d27;border:1px solid #2a2d3e;border-radius:10px;"
+        f"padding:14px 16px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.2);"
+        f"border-top:3px solid {active_color};'>"
+        f"<div style='font-size:0.62rem;color:#4a4e6a;text-transform:uppercase;"
+        f"letter-spacing:0.1em;font-family:IBM Plex Mono,monospace;'>{label}</div>"
+        f"<div style='font-size:1.4rem;font-weight:700;color:{active_color};margin-top:6px;"
+        f"font-family:IBM Plex Mono,monospace;'>{val}</div>"
         f"</div>"
         for label, val in stat_items
     )
@@ -112,9 +116,9 @@ def render_portfolio(test_mode: bool):
 
     # ── Company rows ─────────────────────────────────────────────────────────
     st.markdown(
-        "<div style='display:grid; grid-template-columns: 70px 130px 1fr 80px 80px 80px 80px 80px 60px;"
-        " gap:4px; padding:4px 8px; font-size:0.65rem; color:#3a6e3a;"
-        " text-transform:uppercase; letter-spacing:0.08em;'>"
+        "<div style='display:grid;grid-template-columns:70px 130px 1fr 80px 80px 80px 80px 80px 60px;"
+        "gap:4px;padding:4px 8px;font-size:0.62rem;color:#4a4e6a;"
+        "text-transform:uppercase;letter-spacing:0.1em;font-family:IBM Plex Mono,monospace;'>"
         "<div>Ticker</div><div>Stage</div><div>Note</div>"
         "<div style='text-align:right;'>Price</div>"
         "<div style='text-align:right;'>1D</div>"
@@ -141,49 +145,50 @@ def render_portfolio(test_mode: bool):
         chg_1m = q.get("chg_1m", 0)
         mcap   = q.get("mcap", "N/A")
 
-        border = "#5a3a00" if is_active_stage else "#1a2e1a"
-        bg     = "#1a1400" if is_active_stage else "#0f1a0f"
+        sc = STAGE_COLORS.get(stage, "#8b8fa8")
+        bg = "#1a1d27"
+        border = sc if is_active_stage else "#2a2d3e"
+        left_accent = f"border-left:3px solid {sc};" if is_active_stage else f"border-left:3px solid {sc}60;"
 
         col_ticker, col_stage, col_note, col_price, col_1d, col_5d, col_1m, col_mcap, col_spark, col_del = st.columns(
             [0.9, 1.6, 2.5, 1.0, 1.0, 1.0, 1.0, 1.0, 1.2, 0.5]
         )
 
+        cell = f"background:{bg};border:1px solid {border};border-radius:6px;padding:8px 10px;"
+
         with col_ticker:
             st.markdown(
-                f"<div style='background:{bg}; border:1px solid {border}; border-radius:4px;"
-                f" padding:6px 8px; font-weight:700; font-size:0.82rem;"
-                f" color:{'#f0a500' if is_active_stage else '#90c890'};'>{ticker}</div>",
+                f"<div style='{cell}{left_accent}font-weight:700;font-size:0.84rem;"
+                f"color:{sc};font-family:IBM Plex Mono,monospace;'>{ticker}</div>",
                 unsafe_allow_html=True,
             )
         with col_stage:
             st.markdown(
-                f"<div style='background:{bg}; border:1px solid {border}; border-radius:4px;"
-                f" padding:6px 8px; font-size:0.7rem; color:#7a9e7a;'>{stage}</div>",
+                f"<div style='{cell}font-size:0.68rem;color:#8b8fa8;'>{stage}</div>",
                 unsafe_allow_html=True,
             )
         with col_note:
             st.markdown(
-                f"<div style='background:{bg}; border:1px solid {border}; border-radius:4px;"
-                f" padding:6px 8px; font-size:0.7rem; color:#4a6e4a;'>{note}</div>",
+                f"<div style='{cell}font-size:0.68rem;color:#4a4e6a;'>{note}</div>",
                 unsafe_allow_html=True,
             )
         with col_price:
             st.markdown(
-                f"<div style='background:{bg}; border:1px solid {border}; border-radius:4px;"
-                f" padding:6px 8px; font-size:0.82rem; color:#c8d8c0; text-align:right;'>${price:.2f}</div>",
+                f"<div style='{cell}font-size:0.84rem;color:#ffffff;text-align:right;"
+                f"font-family:IBM Plex Mono,monospace;'>${price:.2f}</div>",
                 unsafe_allow_html=True,
             )
         for col_chg, chg in [(col_1d, chg_1d), (col_5d, chg_5d), (col_1m, chg_1m)]:
             with col_chg:
                 st.markdown(
-                    f"<div style='background:{bg}; border:1px solid {border}; border-radius:4px;"
-                    f" padding:6px 8px; font-size:0.78rem; color:{_chg_color(chg)}; text-align:right;'>{_fmt_chg(chg)}</div>",
+                    f"<div style='{cell}font-size:0.8rem;color:{_chg_color(chg)};text-align:right;"
+                    f"font-family:IBM Plex Mono,monospace;font-weight:600;'>{_fmt_chg(chg)}</div>",
                     unsafe_allow_html=True,
                 )
         with col_mcap:
             st.markdown(
-                f"<div style='background:{bg}; border:1px solid {border}; border-radius:4px;"
-                f" padding:6px 8px; font-size:0.72rem; color:#7a9e7a; text-align:right;'>{mcap}</div>",
+                f"<div style='{cell}font-size:0.72rem;color:#8b8fa8;text-align:right;"
+                f"font-family:IBM Plex Mono,monospace;'>{mcap}</div>",
                 unsafe_allow_html=True,
             )
         with col_spark:

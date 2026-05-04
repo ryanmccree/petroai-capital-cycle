@@ -12,19 +12,20 @@ import streamlit as st
 import plotly.graph_objects as go
 import numpy as np
 
-from utils.state import STAGES, STAGE_DESCRIPTIONS
+from utils.state import STAGES, STAGE_DESCRIPTIONS, STAGE_COLORS, STAGE_CSS_KEYS, STAGE_IMAGES
 from utils.data import get_quote, get_sparkline, DUMMY_QUOTES
 
 
 # ── Chart builder ──────────────────────────────────────────────────────────────
 
-def _price_chart(ticker: str, series, test_mode: bool) -> go.Figure:
+def _price_chart(ticker: str, series, stage_color: str, test_mode: bool) -> go.Figure:
     prices = series.tolist()
     n = len(prices)
     xs = list(range(n))
 
-    color_line = "#4ade80" if prices[-1] >= prices[0] else "#f87171"
-    fill_color = "rgba(122,184,122,0.08)" if prices[-1] >= prices[0] else "rgba(200,64,64,0.08)"
+    r, g, b = int(stage_color[1:3], 16), int(stage_color[3:5], 16), int(stage_color[5:7], 16)
+    color_line = stage_color
+    fill_color = f"rgba({r},{g},{b},0.10)"
 
     # Fake volume for test mode
     rng = np.random.default_rng(seed=abs(hash(ticker)) % (2**31))
@@ -64,29 +65,29 @@ def _price_chart(ticker: str, series, test_mode: bool) -> go.Figure:
     )
 
     fig.update_layout(
-        paper_bgcolor="#0a0e0a",
-        plot_bgcolor="#0a0e0a",
-        margin=dict(l=10, r=10, t=30, b=10),
-        height=280,
+        paper_bgcolor="#0f1117",
+        plot_bgcolor="#0f1117",
+        margin=dict(l=10, r=10, t=36, b=10),
+        height=300,
         xaxis=dict(
-            tickfont=dict(size=8, color="#2a5e2a", family="IBM Plex Mono"),
-            gridcolor="#0f1a0f",
+            tickfont=dict(size=8, color="#4a4e6a", family="IBM Plex Mono"),
+            gridcolor="#1a1d27",
             showticklabels=False,
         ),
         yaxis=dict(
-            tickfont=dict(size=9, color="#4a6e4a", family="IBM Plex Mono"),
-            gridcolor="#0f1a0f",
+            tickfont=dict(size=9, color="#8b8fa8", family="IBM Plex Mono"),
+            gridcolor="#1a1d27",
             tickprefix="$",
         ),
         yaxis2=dict(
             overlaying="y",
             side="right",
             showgrid=False,
-            tickfont=dict(size=7, color="#1a3e1a", family="IBM Plex Mono"),
+            tickfont=dict(size=7, color="#2a2d3e", family="IBM Plex Mono"),
         ),
         title=dict(
             text=f"{ticker} — 30-Day Price" + (" (TEST DATA)" if test_mode else ""),
-            font=dict(size=10, color="#4a8e4a", family="IBM Plex Mono"),
+            font=dict(size=10, color="#8b8fa8", family="IBM Plex Mono"),
             x=0.01,
         ),
         showlegend=False,
@@ -132,6 +133,24 @@ def render_deep_dive(test_mode: bool):
     note   = co.get("note", "")
     active = st.session_state.current_stage
     is_active_stage = (stage == active)
+    stage_color = STAGE_COLORS.get(stage, "#4D9FFF")
+    css_key = STAGE_CSS_KEYS.get(stage, "compute")
+
+    # ── Hero banner ───────────────────────────────────────────────────────────
+    st.markdown(
+        f"<div class='stage-img-card si-{css_key}' "
+        f"style='min-height:100px;padding:20px 24px;margin-bottom:16px;"
+        f"border-left:4px solid {stage_color};'>"
+        f"<div style='font-size:0.68rem;color:rgba(255,255,255,0.5);"
+        f"font-family:IBM Plex Mono,monospace;letter-spacing:0.1em;text-transform:uppercase;"
+        f"margin-bottom:4px;'>Deep Dive</div>"
+        f"<div style='font-size:1.8rem;font-weight:700;color:#ffffff;"
+        f"font-family:DM Sans,sans-serif;'>{ticker}</div>"
+        f"<div style='font-size:0.8rem;color:{stage_color};font-weight:600;"
+        f"font-family:DM Sans,sans-serif;'>{stage}</div>"
+        f"</div>",
+        unsafe_allow_html=True,
+    )
 
     q     = get_quote(ticker, test_mode)
     spark = get_sparkline(ticker, test_mode, 30)
@@ -177,11 +196,13 @@ def render_deep_dive(test_mode: bool):
     for col, label, val, color in metrics:
         with col:
             st.markdown(
-                f"<div style='background:#0f1a0f; border:1px solid #1a2e1a; border-radius:6px;"
-                f" padding:10px 12px; text-align:center;'>"
-                f"<div style='font-size:0.62rem; color:#3a6e3a; text-transform:uppercase;"
-                f" letter-spacing:0.08em;'>{label}</div>"
-                f"<div style='font-size:1.1rem; font-weight:700; color:{color}; margin-top:4px;'>{val}</div>"
+                f"<div style='background:#1a1d27;border:1px solid #2a2d3e;border-radius:10px;"
+                f"padding:12px 14px;text-align:center;"
+                f"border-top:3px solid {stage_color};box-shadow:0 2px 8px rgba(0,0,0,0.2);'>"
+                f"<div style='font-size:0.6rem;color:#4a4e6a;text-transform:uppercase;"
+                f"letter-spacing:0.1em;font-family:IBM Plex Mono,monospace;'>{label}</div>"
+                f"<div style='font-size:1.15rem;font-weight:700;color:{color};margin-top:5px;"
+                f"font-family:IBM Plex Mono,monospace;'>{val}</div>"
                 f"</div>",
                 unsafe_allow_html=True,
             )
@@ -189,7 +210,7 @@ def render_deep_dive(test_mode: bool):
     st.markdown("<div style='height:12px;'></div>", unsafe_allow_html=True)
 
     # ── Price chart ──────────────────────────────────────────────────────────
-    fig = _price_chart(ticker, spark, test_mode)
+    fig = _price_chart(ticker, spark, stage_color, test_mode)
     st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
 
     # ── Stage peers ──────────────────────────────────────────────────────────
