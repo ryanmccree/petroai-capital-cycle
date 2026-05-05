@@ -27,6 +27,9 @@ DEFAULT_COMPANIES = [
     {"ticker": "INTC",  "stage": "💻 Compute",      "note": "Semiconductor fab"},
     {"ticker": "CIFR",  "stage": "⚡ Energy",       "note": "Bitcoin / energy arb"},
     {"ticker": "CRWV",  "stage": "💻 Compute",      "note": "AI cloud infra"},
+    {"ticker": "GFS",   "stage": "💻 Compute",      "note": "Domestic semiconductor fab — US chip sovereignty play"},
+    {"ticker": "GLW",   "stage": "🔁 Transfer",     "note": "Fiber optic infrastructure — backbone of AI data transfer"},
+    {"ticker": "AA",    "stage": "🌐 Sovereignty",  "note": "Domestic aluminum supply — critical material for AI infrastructure buildout"},
 ]
 
 STAGES = [
