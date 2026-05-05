@@ -85,8 +85,8 @@ def render_portfolio(test_mode: bool):
         f"<div style='background:#1a1d27;border:1px solid #2a2d3e;border-radius:10px;"
         f"padding:14px 16px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,0.2);"
         f"border-top:3px solid {active_color};'>"
-        f"<div style='font-size:0.62rem;color:#4a4e6a;text-transform:uppercase;"
-        f"letter-spacing:0.1em;font-family:IBM Plex Mono,monospace;'>{label}</div>"
+        f"<div style='font-size:0.75rem;color:#9da3b4;text-transform:uppercase;"
+        f"letter-spacing:0.08em;font-family:IBM Plex Mono,monospace;'>{label}</div>"
         f"<div style='font-size:1.4rem;font-weight:700;color:{active_color};margin-top:6px;"
         f"font-family:IBM Plex Mono,monospace;'>{val}</div>"
         f"</div>"
@@ -117,8 +117,8 @@ def render_portfolio(test_mode: bool):
     # ── Company rows ─────────────────────────────────────────────────────────
     st.markdown(
         "<div style='display:grid;grid-template-columns:70px 130px 1fr 80px 80px 80px 80px 80px 60px;"
-        "gap:4px;padding:4px 8px;font-size:0.62rem;color:#4a4e6a;"
-        "text-transform:uppercase;letter-spacing:0.1em;font-family:IBM Plex Mono,monospace;'>"
+        "gap:4px;padding:4px 8px;font-size:0.75rem;color:#9da3b4;"
+        "text-transform:uppercase;letter-spacing:0.08em;font-family:IBM Plex Mono,monospace;'>"
         "<div>Ticker</div><div>Stage</div><div>Note</div>"
         "<div style='text-align:right;'>Price</div>"
         "<div style='text-align:right;'>1D</div>"
@@ -158,36 +158,36 @@ def render_portfolio(test_mode: bool):
 
         with col_ticker:
             st.markdown(
-                f"<div style='{cell}{left_accent}font-weight:700;font-size:0.84rem;"
+                f"<div style='{cell}{left_accent}font-weight:700;font-size:1.1rem;"
                 f"color:{sc};font-family:IBM Plex Mono,monospace;'>{ticker}</div>",
                 unsafe_allow_html=True,
             )
         with col_stage:
             st.markdown(
-                f"<div style='{cell}font-size:0.68rem;color:#8b8fa8;'>{stage}</div>",
+                f"<div style='{cell}font-size:0.82rem;color:#c8ccd8;'>{stage}</div>",
                 unsafe_allow_html=True,
             )
         with col_note:
             st.markdown(
-                f"<div style='{cell}font-size:0.68rem;color:#4a4e6a;'>{note}</div>",
+                f"<div style='{cell}font-size:0.88rem;color:#b0b8cc;'>{note}</div>",
                 unsafe_allow_html=True,
             )
         with col_price:
             st.markdown(
-                f"<div style='{cell}font-size:0.84rem;color:#ffffff;text-align:right;"
+                f"<div style='{cell}font-size:1.3rem;font-weight:700;color:#ffffff;text-align:right;"
                 f"font-family:IBM Plex Mono,monospace;'>${price:.2f}</div>",
                 unsafe_allow_html=True,
             )
         for col_chg, chg in [(col_1d, chg_1d), (col_5d, chg_5d), (col_1m, chg_1m)]:
             with col_chg:
                 st.markdown(
-                    f"<div style='{cell}font-size:0.8rem;color:{_chg_color(chg)};text-align:right;"
-                    f"font-family:IBM Plex Mono,monospace;font-weight:600;'>{_fmt_chg(chg)}</div>",
+                    f"<div style='{cell}font-size:1rem;color:{_chg_color(chg)};text-align:right;"
+                    f"font-family:IBM Plex Mono,monospace;font-weight:700;'>{_fmt_chg(chg)}</div>",
                     unsafe_allow_html=True,
                 )
         with col_mcap:
             st.markdown(
-                f"<div style='{cell}font-size:0.72rem;color:#8b8fa8;text-align:right;"
+                f"<div style='{cell}font-size:0.85rem;color:#c8ccd8;text-align:right;"
                 f"font-family:IBM Plex Mono,monospace;'>{mcap}</div>",
                 unsafe_allow_html=True,
             )

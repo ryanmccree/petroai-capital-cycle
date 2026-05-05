@@ -47,8 +47,8 @@ def inject_css():
             --card-bg:   #1a1d27;
             --border:    #2a2d3e;
             --text-1:    #ffffff;
-            --text-2:    #8b8fa8;
-            --text-3:    #4a4e6a;
+            --text-2:    #c8ccd8;
+            --text-3:    #9da3b4;
             --ease:      0.2s ease;
         }}
 
@@ -57,6 +57,7 @@ def inject_css():
             background-color: var(--bg) !important;
             color: var(--text-1) !important;
             font-family: 'DM Sans', sans-serif;
+            font-size: 1rem;
         }}
 
         /* ── Sidebar ── */
@@ -65,13 +66,16 @@ def inject_css():
             border-right: 1px solid var(--border) !important;
             min-width: 240px !important;
         }}
-        [data-testid="stSidebar"] * {{ color: var(--text-2) !important; font-size: 0.85rem; }}
+        [data-testid="stSidebar"] * {{
+            color: #c0c8d8 !important;
+            font-size: 0.95rem;
+        }}
         [data-testid="stSidebar"] h3 {{ color: #FF9500 !important; font-size: 1rem !important; }}
 
         /* ── Header ── */
         .header-block {{ padding: 0.5rem 0 0.25rem; }}
         .header-title {{
-            font-size: 1.5rem;
+            font-size: 2rem;
             font-weight: 700;
             color: #FF9500;
             letter-spacing: 0.03em;
@@ -79,8 +83,8 @@ def inject_css():
             font-family: 'DM Sans', sans-serif;
         }}
         .header-thesis {{
-            font-size: 0.82rem;
-            line-height: 1.65;
+            font-size: 0.88rem;
+            line-height: 1.8;
             color: var(--text-2);
             max-width: 900px;
             font-style: italic;
@@ -91,15 +95,15 @@ def inject_css():
             color: #FF9500 !important;
             font-weight: 700;
             text-decoration: none;
-            font-size: 0.85rem;
+            font-size: 0.95rem;
         }}
         .handle-link:hover {{ color: #ffb340 !important; }}
-        .last-updated {{ font-size: 0.65rem; color: var(--text-3); margin-top: 4px; font-family: 'IBM Plex Mono', monospace; }}
+        .last-updated {{ font-size: 0.78rem; color: var(--text-3); margin-top: 4px; font-family: 'IBM Plex Mono', monospace; }}
         .test-badge {{
             display: inline-block;
             background: rgba(255,107,43,0.12);
             color: #FF6B2B;
-            font-size: 0.6rem;
+            font-size: 0.7rem;
             font-weight: 700;
             padding: 2px 8px;
             border-radius: 4px;
@@ -116,22 +120,22 @@ def inject_css():
 
         /* ── Tabs ── */
         [data-testid="stTabs"] button {{
-            color: var(--text-3) !important;
-            font-size: 0.9rem !important;
+            color: #8890a8 !important;
+            font-size: 1rem !important;
             font-family: 'DM Sans', sans-serif !important;
             transition: color var(--ease) !important;
         }}
         [data-testid="stTabs"] button[aria-selected="true"] {{
-            color: #FF9500 !important;
+            color: #ffffff !important;
             border-bottom-color: #FF9500 !important;
         }}
 
         /* ── Section headers ── */
         .section-header {{
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--text-2);
-            letter-spacing: 0.14em;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #a0a8bc;
+            letter-spacing: 0.08em;
             text-transform: uppercase;
             margin-bottom: 0.9rem;
             padding-bottom: 8px;
@@ -146,7 +150,7 @@ def inject_css():
             border-radius: 12px;
             padding: 16px;
             margin-bottom: 10px;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             min-height: 110px;
             transition: all var(--ease);
             box-shadow: 0 2px 8px rgba(0,0,0,0.25);
@@ -162,24 +166,24 @@ def inject_css():
         }}
         .stage-name {{
             font-weight: 700;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             color: var(--text-1);
             margin-bottom: 4px;
             font-family: 'DM Sans', sans-serif;
         }}
         .stage-card.active-constraint .stage-name {{ color: #FF9500; }}
         .stage-desc {{
-            color: var(--text-2);
-            font-size: 0.82rem;
+            color: #b0b8cc;
+            font-size: 0.9rem;
             margin-top: 4px;
-            line-height: 1.45;
+            line-height: 1.5;
             font-family: 'IBM Plex Mono', monospace;
         }}
         .company-pill {{
             display: inline-block;
-            background: rgba(255,255,255,0.06);
-            color: var(--text-2);
-            font-size: 0.8rem;
+            background: rgba(255,255,255,0.10);
+            color: #ffffff;
+            font-size: 0.85rem;
             padding: 3px 8px;
             border-radius: 4px;
             margin: 4px 3px 0 0;
@@ -189,9 +193,9 @@ def inject_css():
             transition: all var(--ease);
         }}
         .active-constraint .company-pill {{
-            background: rgba(255,149,0,0.1);
-            color: #FF9500;
-            border-color: rgba(255,149,0,0.3);
+            background: rgba(255,149,0,0.15);
+            color: #ffffff;
+            border-color: rgba(255,149,0,0.4);
         }}
 
         /* ── Stage image cards ── */
@@ -233,6 +237,7 @@ def inject_css():
         [data-testid="stButton"] button {{
             font-family: 'IBM Plex Mono', monospace !important;
             border-radius: 8px !important;
+            font-size: 0.9rem !important;
             transition: all var(--ease) !important;
         }}
         [data-testid="stButton"] button[kind="secondary"] {{
@@ -260,8 +265,8 @@ def inject_css():
         /* ── Footer ── */
         .footer {{
             text-align: center;
-            font-size: 0.62rem;
-            color: var(--text-3);
+            font-size: 0.8rem;
+            color: #6a7280;
             padding: 1.5rem 0 0.5rem;
             border-top: 1px solid var(--border);
             margin-top: 2rem;
@@ -276,22 +281,37 @@ def inject_css():
             background: var(--card-bg) !important;
             border-color: var(--border) !important;
             color: var(--text-2) !important;
+            font-size: 0.95rem !important;
         }}
 
         /* ── Selectbox / radio ── */
         [data-testid="stSelectbox"] > div,
-        [data-testid="stRadio"] label {{ color: var(--text-2) !important; }}
+        [data-testid="stRadio"] label {{
+            color: var(--text-2) !important;
+            font-size: 0.95rem !important;
+        }}
+
+        /* ── General markdown text ── */
+        [data-testid="stMarkdownContainer"] p,
+        [data-testid="stMarkdownContainer"] li {{
+            font-size: 0.95rem;
+            color: var(--text-2);
+        }}
+        .stCaption, [data-testid="stCaptionContainer"] {{
+            font-size: 0.85rem !important;
+            color: var(--text-3) !important;
+        }}
 
         /* ══════════════════════════════════════════════════════
            MOBILE  (<768px)
         ══════════════════════════════════════════════════════ */
         @media screen and (max-width: 768px) {{
-            .header-title  {{ font-size: 1.1rem  !important; }}
-            .header-thesis {{ font-size: 0.62rem !important; }}
+            .header-title  {{ font-size: 1.3rem  !important; }}
+            .header-thesis {{ font-size: 0.78rem !important; }}
             .stage-card    {{ min-height: 80px !important; }}
             .stage-img-card {{ min-height: 120px !important; }}
-            .company-pill  {{ font-size: 0.58rem !important; padding: 2px 5px !important; }}
-            .footer        {{ font-size: 0.58rem !important; }}
+            .company-pill  {{ font-size: 0.72rem !important; padding: 2px 5px !important; }}
+            .footer        {{ font-size: 0.72rem !important; }}
             [data-testid="stHorizontalBlock"] {{ flex-wrap: wrap !important; }}
             [data-testid="stHorizontalBlock"] > [data-testid="column"] {{
                 flex: 1 1 100% !important;

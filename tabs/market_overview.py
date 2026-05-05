@@ -176,17 +176,17 @@ def render_market_overview(test_mode: bool):
             st.markdown(
                 f"<div style='background:#1a1d27;border:1px solid {'#2a2d3e' if not is_active else sc};"
                 f"border-left:3px solid {sc};"
-                f"border-radius:0 8px 8px 0;padding:8px 12px;margin-bottom:6px;"
+                f"border-radius:0 8px 8px 0;padding:10px 14px;margin-bottom:6px;"
                 f"display:flex;justify-content:space-between;align-items:center;"
                 f"box-shadow:{'0 0 12px ' + sc + '30' if is_active else 'none'};'>"
                 f"<div style='display:flex;align-items:center;gap:8px;'>"
-                f"<span style='font-size:0.62rem;color:#4a4e6a;font-family:IBM Plex Mono,monospace;'>#{rank}</span>"
+                f"<span style='font-size:0.75rem;color:#9da3b4;font-family:IBM Plex Mono,monospace;'>#{rank}</span>"
                 f"<span style='width:8px;height:8px;border-radius:50%;background:{sc};"
                 f"display:inline-block;flex-shrink:0;'></span>"
-                f"<span style='font-size:0.78rem;color:{'#ffffff' if is_active else '#8b8fa8'};"
+                f"<span style='font-size:0.95rem;color:{'#ffffff' if is_active else '#c8ccd8'};"
                 f"font-weight:{'700' if is_active else '400'};'>{stage}</span>"
                 f"</div>"
-                f"<div style='font-size:0.84rem;font-weight:700;color:{chg_color};"
+                f"<div style='font-size:1.1rem;font-weight:700;color:{chg_color};"
                 f"font-family:IBM Plex Mono,monospace;'>{'+'if val>=0 else''}{val:.1f}%</div>"
                 f"</div>",
                 unsafe_allow_html=True,
@@ -215,34 +215,34 @@ def render_market_overview(test_mode: bool):
         losers  = all_quotes[-3:][::-1]
 
         st.markdown(
-            "<div style='font-size:0.65rem; color:#2a5e2a; margin-bottom:4px;'>▲ Top gainers</div>",
+            "<div style='font-size:0.78rem; color:#9da3b4; margin-bottom:5px;'>▲ Top gainers</div>",
             unsafe_allow_html=True,
         )
         for item in gainers:
             color = _chg_color(item["val"])
             st.markdown(
                 f"<div style='background:#0f1a0f; border:1px solid #1a2e1a; border-radius:4px;"
-                f" padding:5px 10px; margin-bottom:4px; display:flex; justify-content:space-between;'>"
-                f"<span style='font-size:0.75rem; font-weight:700; color:#90c890;'>{item['ticker']}</span>"
-                f"<span style='font-size:0.65rem; color:#3a6e3a;'>{item['stage'].split(' ',1)[-1]}</span>"
-                f"<span style='font-size:0.75rem; color:{color}; font-weight:700;'>"
+                f" padding:7px 12px; margin-bottom:5px; display:flex; justify-content:space-between;'>"
+                f"<span style='font-size:0.95rem; font-weight:700; color:#c8ccd8;'>{item['ticker']}</span>"
+                f"<span style='font-size:0.82rem; color:#9da3b4;'>{item['stage'].split(' ',1)[-1]}</span>"
+                f"<span style='font-size:0.95rem; color:{color}; font-weight:700;'>"
                 f"{'+'if item['val']>=0 else''}{item['val']:.1f}%</span>"
                 f"</div>",
                 unsafe_allow_html=True,
             )
 
         st.markdown(
-            "<div style='font-size:0.65rem; color:#3a1a1a; margin-bottom:4px; margin-top:8px;'>▼ Laggards</div>",
+            "<div style='font-size:0.78rem; color:#9da3b4; margin-bottom:5px; margin-top:10px;'>▼ Laggards</div>",
             unsafe_allow_html=True,
         )
         for item in losers:
             color = _chg_color(item["val"])
             st.markdown(
                 f"<div style='background:#0f1a0f; border:1px solid #1a2e1a; border-radius:4px;"
-                f" padding:5px 10px; margin-bottom:4px; display:flex; justify-content:space-between;'>"
-                f"<span style='font-size:0.75rem; font-weight:700; color:#90c890;'>{item['ticker']}</span>"
-                f"<span style='font-size:0.65rem; color:#3a6e3a;'>{item['stage'].split(' ',1)[-1]}</span>"
-                f"<span style='font-size:0.75rem; color:{color}; font-weight:700;'>"
+                f" padding:7px 12px; margin-bottom:5px; display:flex; justify-content:space-between;'>"
+                f"<span style='font-size:0.95rem; font-weight:700; color:#c8ccd8;'>{item['ticker']}</span>"
+                f"<span style='font-size:0.82rem; color:#9da3b4;'>{item['stage'].split(' ',1)[-1]}</span>"
+                f"<span style='font-size:0.95rem; color:{color}; font-weight:700;'>"
                 f"{'+'if item['val']>=0 else''}{item['val']:.1f}%</span>"
                 f"</div>",
                 unsafe_allow_html=True,

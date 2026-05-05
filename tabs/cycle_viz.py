@@ -91,7 +91,7 @@ def _render_horizontal_flow():
             x=xc, y=LABEL_Y + 0.22,
             text=f"<b>{stage}</b>",
             showarrow=False,
-            font=dict(size=12, color=sc if is_active else NODE_TEXT, family="IBM Plex Mono"),
+            font=dict(size=13, color=sc if is_active else NODE_TEXT, family="IBM Plex Mono"),
             xanchor="center",
         )
 
@@ -101,7 +101,7 @@ def _render_horizontal_flow():
                 x=xc, y=LABEL_Y - 0.28,
                 text=pill_text,
                 showarrow=False,
-                font=dict(size=9, color=_hex_rgba(sc, 0.85) if is_active else PILL_TXT, family="IBM Plex Mono"),
+                font=dict(size=10, color=_hex_rgba(sc, 0.9) if is_active else "#c8ccd8", family="IBM Plex Mono"),
                 xanchor="center",
             )
 
@@ -112,7 +112,7 @@ def _render_horizontal_flow():
             x=xc, y=Y_CENTER - BOX_H/2 - 0.28,
             text=short_desc,
             showarrow=False,
-            font=dict(size=8, color=_hex_rgba(sc, 0.5), family="IBM Plex Mono"),
+            font=dict(size=9, color=_hex_rgba(sc, 0.6), family="IBM Plex Mono"),
             xanchor="center",
         )
 
@@ -246,15 +246,15 @@ def _render_circular_flow():
         # Stage name (middle)
         name = stage.split(" ", 1)[1] if " " in stage else stage
         fig.add_annotation(x=cx, y=cy-0.02, text=f"<b>{name}</b>", showarrow=False,
-            font=dict(size=9, color=sc if is_active else "#ffffff",
+            font=dict(size=11, color=sc if is_active else "#ffffff",
                       family="IBM Plex Mono"),
             xanchor="center", yanchor="middle")
 
         # Tickers (bottom)
         if tickers_txt:
             fig.add_annotation(x=cx, y=cy-0.19, text=tickers_txt, showarrow=False,
-                font=dict(size=7.5,
-                          color=_hex_rgba(sc, 0.9) if is_active else "#4a4e6a",
+                font=dict(size=9,
+                          color=_hex_rgba(sc, 0.95) if is_active else "#c8ccd8",
                           family="IBM Plex Mono"),
                 xanchor="center", yanchor="middle")
 

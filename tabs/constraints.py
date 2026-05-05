@@ -127,7 +127,7 @@ def render_constraints(test_mode: bool):
             col_lbl, col_slide, col_badge = st.columns([2, 4, 1.2])
             with col_lbl:
                 st.markdown(
-                    f"<div style='font-size:0.72rem; color:{label_color}; padding-top:6px;"
+                    f"<div style='font-size:0.95rem; color:{label_color}; padding-top:6px;"
                     f" font-weight:{'700' if is_active else '400'};'>{stage}</div>",
                     unsafe_allow_html=True,
                 )
@@ -172,10 +172,10 @@ def render_constraints(test_mode: bool):
                 f"<div style='background:#1a1d27;border-left:3px solid {sc};"
                 f"padding:10px 12px;margin-bottom:8px;border-radius:0 8px 8px 0;"
                 f"box-shadow:0 2px 8px rgba(0,0,0,0.2);'>"
-                f"<div style='font-size:0.62rem;color:#4a4e6a;font-family:IBM Plex Mono,monospace;'>{date}</div>"
-                f"<div style='font-size:0.78rem;color:{sc};font-weight:700;margin:3px 0;"
+                f"<div style='font-size:0.82rem;color:#9da3b4;font-family:IBM Plex Mono,monospace;'>{date}</div>"
+                f"<div style='font-size:0.92rem;color:{sc};font-weight:700;margin:3px 0;"
                 f"font-family:DM Sans,sans-serif;'>{stage}</div>"
-                f"<div style='font-size:0.68rem;color:#8b8fa8;line-height:1.45;"
+                f"<div style='font-size:0.92rem;color:#c0c8d8;line-height:1.55;"
                 f"font-family:IBM Plex Mono,monospace;'>{note}</div>"
                 f"</div>",
                 unsafe_allow_html=True,

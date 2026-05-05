@@ -389,9 +389,9 @@ def _render_company_summary(ticker: str, stage_color: str, test_mode: bool):
     ]
     meta_cells = "".join(
         f"<div>"
-        f"<div style='font-size:0.62rem;color:#4a4e6a;text-transform:uppercase;"
-        f"letter-spacing:0.1em;font-family:IBM Plex Mono,monospace;margin-bottom:2px;'>{k}</div>"
-        f"<div style='font-size:0.8rem;color:#8b8fa8;'>{v}</div>"
+        f"<div style='font-size:0.75rem;color:#9da3b4;text-transform:uppercase;"
+        f"letter-spacing:0.08em;font-family:IBM Plex Mono,monospace;margin-bottom:2px;'>{k}</div>"
+        f"<div style='font-size:0.92rem;color:#c8ccd8;'>{v}</div>"
         f"</div>"
         for k, v in meta
     )
@@ -400,7 +400,7 @@ def _render_company_summary(ticker: str, stage_color: str, test_mode: bool):
         st.markdown(
             f"<div style='background:#1a1d27;border-left:4px solid {stage_color};"
             f"border-radius:0 10px 10px 0;padding:18px 20px;'>"
-            f"<div style='font-size:0.85rem;color:#c8d8c0;line-height:1.75;margin-bottom:16px;"
+            f"<div style='font-size:0.95rem;color:#c8ccd8;line-height:1.8;margin-bottom:16px;"
             f"font-family:IBM Plex Mono,monospace;'>{info['summary']}</div>"
             f"<div style='display:grid;grid-template-columns:repeat(3,1fr);gap:14px;'>"
             f"{meta_cells}</div></div>",
@@ -411,8 +411,8 @@ def _render_company_summary(ticker: str, stage_color: str, test_mode: bool):
 def _render_fin_table(metrics: dict, labels: list, stage_color: str, title: str):
     th = (
         f"background:{stage_color}22;color:{stage_color};"
-        f"font-size:0.68rem;font-family:IBM Plex Mono,monospace;"
-        f"padding:7px 10px;text-align:right;font-weight:700;"
+        f"font-size:0.82rem;font-family:IBM Plex Mono,monospace;"
+        f"padding:8px 10px;text-align:right;font-weight:700;"
         f"border-bottom:2px solid {stage_color}55;"
     )
     th_l = th.replace("text-align:right", "text-align:left")
@@ -425,8 +425,8 @@ def _render_fin_table(metrics: dict, labels: list, stage_color: str, title: str)
     rows_html = ""
     for i, (metric, values) in enumerate(metrics.items()):
         row_bg = "#1a1d27" if i % 2 == 0 else "#141620"
-        td_base = f"font-size:0.76rem;font-family:IBM Plex Mono,monospace;padding:7px 10px;"
-        td_lbl  = f"background:{row_bg};color:#8b8fa8;{td_base}border-right:1px solid #2a2d3e;"
+        td_base = f"font-size:0.92rem;font-family:IBM Plex Mono,monospace;padding:8px 10px;"
+        td_lbl  = f"background:{row_bg};color:#c8ccd8;{td_base}border-right:1px solid #2a2d3e;"
         rows_html += f"<tr><td style='{td_lbl}'>{metric}</td>"
         for val in values:
             color = _val_color(val)
@@ -653,9 +653,9 @@ def render_deep_dive(test_mode: bool):
                 f"<div style='background:#1a1d27;border:1px solid #2a2d3e;border-radius:10px;"
                 f"padding:12px 14px;text-align:center;"
                 f"border-top:3px solid {stage_color};box-shadow:0 2px 8px rgba(0,0,0,0.2);'>"
-                f"<div style='font-size:0.6rem;color:#4a4e6a;text-transform:uppercase;"
-                f"letter-spacing:0.1em;font-family:IBM Plex Mono,monospace;'>{label}</div>"
-                f"<div style='font-size:1.15rem;font-weight:700;color:{color};margin-top:5px;"
+                f"<div style='font-size:0.78rem;color:#9da3b4;text-transform:uppercase;"
+                f"letter-spacing:0.08em;font-family:IBM Plex Mono,monospace;'>{label}</div>"
+                f"<div style='font-size:1.4rem;font-weight:700;color:{color};margin-top:5px;"
                 f"font-family:IBM Plex Mono,monospace;'>{val}</div>"
                 f"</div>",
                 unsafe_allow_html=True,
