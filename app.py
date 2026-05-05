@@ -15,7 +15,7 @@ from tabs.market_overview import render_market_overview
 
 # ─── TEST MODE ────────────────────────────────────────────────────────────────
 # Set True to bypass yfinance entirely and use hardcoded dummy data.
-TEST_MODE = True
+TEST_MODE = False
 # ──────────────────────────────────────────────────────────────────────────────
 
 THESIS_SUMMARY = (
