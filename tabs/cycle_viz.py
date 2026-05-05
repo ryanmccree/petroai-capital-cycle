@@ -142,102 +142,171 @@ def _render_horizontal_flow():
 
 
 def _render_circular_flow():
-    """Render the 8-stage cycle as a circular Plotly diagram."""
+    """Professional flywheel — 8 stage nodes on a ring with arc arrows and center hub."""
     active = st.session_state.current_stage
-    n = len(STAGES)
-    fig = go.Figure()
+    n      = len(STAGES)
+    fig    = go.Figure()
+
+    R          = 1.55   # ring radius (node centers)
+    R_HUB      = 0.44   # hub circle radius
+    R_ARC      = 1.70   # arc arrow radius (outside ring)
+    HW         = 0.43   # node half-width
+    HH         = 0.29   # node half-height
+    ARC_MARGIN = 0.10   # radians to trim near each node end
 
     fig.update_layout(
-        paper_bgcolor=BG,
-        plot_bgcolor=BG,
-        margin=dict(l=30, r=30, t=30, b=30),
-        height=600,
-        xaxis=dict(visible=False, range=[-2.3, 2.3]),
-        yaxis=dict(visible=False, range=[-2.3, 2.3], scaleanchor="x"),
+        paper_bgcolor="rgba(0,0,0,0)",
+        plot_bgcolor="rgba(0,0,0,0)",
+        margin=dict(l=10, r=10, t=24, b=24),
+        height=650,
+        xaxis=dict(visible=False, range=[-2.4, 2.4]),
+        yaxis=dict(visible=False, range=[-2.4, 2.4], scaleanchor="x"),
         showlegend=False,
+        clickmode="event+select",
     )
 
-    R = 1.58      # node center radius
-    BOX_W = 0.85
-    BOX_H = 0.50
-
-    # Outer ring
-    theta_ring = [i * 2 * math.pi / 360 for i in range(361)]
+    # ── Outer dashed ring ────────────────────────────────────────────────────
+    ring_t = [2 * math.pi * k / 120 for k in range(121)]
     fig.add_trace(go.Scatter(
-        x=[R * math.cos(t) for t in theta_ring],
-        y=[R * math.sin(t) for t in theta_ring],
+        x=[R * math.cos(t) for t in ring_t],
+        y=[R * math.sin(t) for t in ring_t],
         mode="lines",
         line=dict(color="#2a2d3e", width=1, dash="dot"),
-        hoverinfo="skip",
+        hoverinfo="skip", showlegend=False,
     ))
 
+    # ── Center hub ───────────────────────────────────────────────────────────
+    fig.add_shape(type="circle",
+        x0=-R_HUB, y0=-R_HUB, x1=R_HUB, y1=R_HUB,
+        fillcolor="#13151f", line=dict(color="#2a2d3e", width=2))
+    fig.add_shape(type="circle",
+        x0=-R_HUB*0.82, y0=-R_HUB*0.82, x1=R_HUB*0.82, y1=R_HUB*0.82,
+        fillcolor="rgba(0,0,0,0)", line=dict(color="#1e2130", width=1, dash="dot"))
+
+    for text, y_pos, sz, color in [
+        ("<b>PetroAI</b>",   0.19, 12,  "#FF9500"),
+        ("Flywheel",         0.04, 9.5, "#8b8fa8"),
+        ("Solve one →",     -0.12, 7,   "#4a4e6a"),
+        ("expose the next", -0.22, 7,   "#4a4e6a"),
+    ]:
+        fig.add_annotation(x=0, y=y_pos, text=text, showarrow=False,
+            font=dict(size=sz, color=color, family="IBM Plex Mono"),
+            xanchor="center", yanchor="middle")
+
+    # Clockwise rotation indicators inside hub
+    for hub_deg in [30, 120, 210, 300]:
+        ha = math.radians(hub_deg)
+        pr = R_HUB * 0.54
+        px, py = pr * math.cos(ha), pr * math.sin(ha)
+        tx, ty = math.sin(ha) * 0.055, -math.cos(ha) * 0.055
+        fig.add_annotation(ax=px - tx, ay=py - ty, x=px + tx, y=py + ty,
+            xref="x", yref="y", axref="x", ayref="y",
+            showarrow=True, arrowhead=2, arrowsize=0.7, arrowwidth=1,
+            arrowcolor="#2a2d3e")
+
+    # ── Nodes + arc arrows + click targets ───────────────────────────────────
+    scatter_x, scatter_y, hover_texts, stage_labels = [], [], [], []
+
     for i, stage in enumerate(STAGES):
-        angle = math.pi / 2 - i * 2 * math.pi / n
-        cx = R * math.cos(angle)
-        cy = R * math.sin(angle)
+        angle = math.pi / 2 - i * math.pi / 4      # clock positions, clockwise
+        cx    = R * math.cos(angle)
+        cy    = R * math.sin(angle)
         is_active = (stage == active)
         sc = STAGE_COLORS.get(stage, "#ffffff")
-
         companies = _companies_for_stage(stage)
-        pill_txt = " ".join(companies[:3]) + ("…" if len(companies) > 3 else "")
+        tickers_txt = " · ".join(companies[:3])
 
-        # Box
-        fig.add_shape(
-            type="rect",
-            x0=cx - BOX_W/2, y0=cy - BOX_H/2,
-            x1=cx + BOX_W/2, y1=cy + BOX_H/2,
-            fillcolor=_hex_rgba(sc, 0.12) if is_active else NODE_BASE,
-            line=dict(color=sc if is_active else _hex_rgba(sc, 0.4), width=2.5 if is_active else 1.2),
-        )
+        # Glow rings (active only)
         if is_active:
-            fig.add_shape(
-                type="rect",
-                x0=cx - BOX_W/2 - 0.05, y0=cy - BOX_H/2 - 0.05,
-                x1=cx + BOX_W/2 + 0.05, y1=cy + BOX_H/2 + 0.05,
-                fillcolor="rgba(0,0,0,0)",
-                line=dict(color=_hex_rgba(sc, 0.45), width=6),
-            )
+            for pad, alpha, lw in [(0.08, 0.25, 8), (0.14, 0.10, 6)]:
+                fig.add_shape(type="rect",
+                    x0=cx-HW-pad, y0=cy-HH-pad, x1=cx+HW+pad, y1=cy+HH+pad,
+                    fillcolor="rgba(0,0,0,0)",
+                    line=dict(color=_hex_rgba(sc, alpha), width=lw))
 
+        # Node box
+        fig.add_shape(type="rect",
+            x0=cx-HW, y0=cy-HH, x1=cx+HW, y1=cy+HH,
+            fillcolor=_hex_rgba(sc, 0.40 if is_active else 0.14),
+            line=dict(color=sc, width=3 if is_active else 1.8))
+
+        # "▲ ACTIVE" badge above the node
+        if is_active:
+            fig.add_annotation(x=cx, y=cy+HH+0.13, text="▲ ACTIVE", showarrow=False,
+                font=dict(size=7.5, color=sc, family="IBM Plex Mono"),
+                xanchor="center", yanchor="bottom",
+                bgcolor=_hex_rgba(sc, 0.18), bordercolor=sc,
+                borderwidth=1, borderpad=3)
+
+        # Emoji (large, top of node)
+        emoji = stage.split(" ")[0]
+        fig.add_annotation(x=cx, y=cy+0.15, text=emoji, showarrow=False,
+            font=dict(size=17), xanchor="center", yanchor="middle")
+
+        # Stage name (middle)
+        name = stage.split(" ", 1)[1] if " " in stage else stage
+        fig.add_annotation(x=cx, y=cy-0.02, text=f"<b>{name}</b>", showarrow=False,
+            font=dict(size=9, color=sc if is_active else "#ffffff",
+                      family="IBM Plex Mono"),
+            xanchor="center", yanchor="middle")
+
+        # Tickers (bottom)
+        if tickers_txt:
+            fig.add_annotation(x=cx, y=cy-0.19, text=tickers_txt, showarrow=False,
+                font=dict(size=7.5,
+                          color=_hex_rgba(sc, 0.9) if is_active else "#4a4e6a",
+                          family="IBM Plex Mono"),
+                xanchor="center", yanchor="middle")
+
+        # Arc arrow to next stage (clockwise = decreasing angle)
+        # arc_delta always decreases by exactly (π/4 − 2·margin), no wrap needed
+        arc_start = angle - ARC_MARGIN
+        arc_delta = -(math.pi / 4 - 2 * ARC_MARGIN)
+        n_arc = 25
+        arc_t = [arc_start + arc_delta * k / (n_arc - 1) for k in range(n_arc)]
+        arc_x = [R_ARC * math.cos(t) for t in arc_t]
+        arc_y = [R_ARC * math.sin(t) for t in arc_t]
+
+        fig.add_trace(go.Scatter(
+            x=arc_x, y=arc_y, mode="lines",
+            line=dict(
+                color=sc if is_active else _hex_rgba(sc, 0.50),
+                width=2.8 if is_active else 1.5,
+                dash="dash" if is_active else "solid",
+            ),
+            hoverinfo="skip", showlegend=False,
+        ))
+        # Arrowhead at end of arc (from [-3] → [-1] gives correct tangent direction)
         fig.add_annotation(
-            x=cx, y=cy + 0.08,
-            text=f"<b>{stage}</b>",
-            showarrow=False,
-            font=dict(size=10, color=sc if is_active else NODE_TEXT, family="IBM Plex Mono"),
-            xanchor="center",
-        )
-        if pill_txt:
-            fig.add_annotation(
-                x=cx, y=cy - 0.13,
-                text=pill_txt,
-                showarrow=False,
-                font=dict(size=8.5, color=_hex_rgba(sc, 0.8) if is_active else PILL_TXT, family="IBM Plex Mono"),
-                xanchor="center",
-            )
-
-        next_angle = math.pi / 2 - ((i + 1) % n) * 2 * math.pi / n
-        nx = R * math.cos(next_angle)
-        ny = R * math.sin(next_angle)
-
-        fig.add_annotation(
-            ax=cx * 0.91, ay=cy * 0.91,
-            x=nx * 0.91,  y=ny * 0.91,
+            ax=arc_x[-3], ay=arc_y[-3], x=arc_x[-1], y=arc_y[-1],
             xref="x", yref="y", axref="x", ayref="y",
-            showarrow=True,
-            arrowhead=2,
-            arrowsize=1.0,
-            arrowwidth=1.5,
-            arrowcolor=sc if is_active else ARROW_CLR,
+            showarrow=True, arrowhead=2,
+            arrowsize=1.2 if is_active else 0.9,
+            arrowwidth=2.5 if is_active else 1.5,
+            arrowcolor=sc if is_active else _hex_rgba(sc, 0.50))
+
+        # Invisible click-target data
+        scatter_x.append(cx)
+        scatter_y.append(cy)
+        stage_labels.append(stage)
+        desc = STAGE_DESCRIPTIONS.get(stage, "")
+        tickers_hover = ", ".join(companies) if companies else "—"
+        hover_texts.append(
+            f"<b>{stage}</b><br><i>{desc}</i><br><br>"
+            f"<b>Positions:</b> {tickers_hover}<br>"
+            f"<span style='color:#666;font-size:0.8em;'>Click to set as active constraint</span>"
         )
 
-    # Center label
-    fig.add_annotation(
-        x=0, y=0,
-        text="<b>PetroAI<br>Flywheel</b>",
-        showarrow=False,
-        font=dict(size=14, color="#8b8fa8", family="IBM Plex Mono"),
-        xanchor="center",
-        yanchor="middle",
-    )
+    # Invisible large markers — intercept clicks on node areas
+    fig.add_trace(go.Scatter(
+        x=scatter_x, y=scatter_y,
+        mode="markers",
+        marker=dict(size=80, opacity=0, color="rgba(0,0,0,0)"),
+        customdata=stage_labels,
+        hovertemplate="%{hovertext}<extra></extra>",
+        hovertext=hover_texts,
+        showlegend=False,
+    ))
 
     return fig
 
@@ -316,7 +385,26 @@ def render_cycle_viz(test_mode: bool):
         st.markdown("</div>", unsafe_allow_html=True)
     elif viz_mode == "Circular":
         fig = _render_circular_flow()
-        st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
+        try:
+            event = st.plotly_chart(
+                fig,
+                use_container_width=True,
+                config={"displayModeBar": False},
+                on_select="rerun",
+                selection_mode=["points"],
+                key="flywheel_chart",
+            )
+            sel = getattr(event, "selection", None) or {}
+            pts = sel.get("points", []) if isinstance(sel, dict) else getattr(sel, "points", [])
+            if pts:
+                first = pts[0]
+                clicked = (first.get("customdata") if isinstance(first, dict)
+                           else getattr(first, "customdata", None))
+                if clicked and clicked in STAGES and clicked != st.session_state.current_stage:
+                    st.session_state.current_stage = clicked
+                    st.rerun()
+        except TypeError:
+            st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
     else:
         _render_heatmap()
 
