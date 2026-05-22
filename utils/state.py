@@ -55,14 +55,14 @@ STAGE_DESCRIPTIONS = {
 }
 
 STAGE_COLORS = {
-    "⚡ Energy":      "#FF6B2B",
-    "🔋 Power":       "#FFD700",
-    "🔌 Grid":        "#00D4FF",
-    "💻 Compute":     "#4D9FFF",
-    "🔁 Transfer":    "#00FF94",
-    "🤖 AI":          "#B44DFF",
-    "🛡️ Defense":     "#FF3B3B",
-    "🌐 Sovereignty": "#FF9500",
+    "⚡ Energy":      "#e76f1c",
+    "🔋 Power":       "#f4d220",
+    "🔌 Grid":        "#22d3ee",
+    "💻 Compute":     "#3b82f6",
+    "🔁 Transfer":    "#4ade80",
+    "🤖 AI":          "#a855f7",
+    "🛡️ Defense":     "#ef4444",
+    "🌐 Sovereignty": "#f59e0b",
 }
 
 STAGE_CSS_KEYS = {

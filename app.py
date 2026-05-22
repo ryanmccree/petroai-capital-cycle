@@ -1,10 +1,12 @@
 """
 PetroAI Capital Cycle Dashboard
 ================================
-Step 1: Core layout, session state, and Cycle Visualization tab.
+Institutional terminal layout — Inter Tight + JetBrains Mono dark slate theme.
 """
 
 import streamlit as st
+from datetime import datetime, timezone
+
 from utils.state import init_session_state
 from utils.theme import inject_css
 from tabs.cycle_viz import render_cycle_viz
@@ -14,18 +16,32 @@ from tabs.deep_dive import render_deep_dive
 from tabs.market_overview import render_market_overview
 
 # ─── TEST MODE ────────────────────────────────────────────────────────────────
-# Set True to bypass yfinance entirely and use hardcoded dummy data.
 TEST_MODE = False
 # ──────────────────────────────────────────────────────────────────────────────
 
-THESIS_SUMMARY = (
-    "PetroAI Capital Cycle — Where energy, compute & capital converge. "
-    "It is a flywheel: Solve one constraint → expose the next → capital rotates. "
-    "The system moves through these interconnected stages: "
-    "Energy → Power → Grid → Compute → Transfer → AI → Defense → Sovereignty. "
-    "Companies are not separate plays — they are layers in one integrated stack. "
-    "The market constantly shifts capital to the current bottleneck forcing trillions in capex."
-)
+# Static ticker tape items (symbol, price, direction, pct)
+_TICKER_ITEMS = [
+    ("PETROAI", "4827.42", "up",   "+1.31%"),
+    ("NVDA",    "1284.30", "up",   "+4.21%"),
+    ("XOM",     "118.42",  "up",   "+1.82%"),
+    ("VST",     "167.21",  "up",   "+3.10%"),
+    ("CCJ",     "58.93",   "up",   "+2.41%"),
+    ("MSFT",    "478.20",  "up",   "+1.12%"),
+    ("PLTR",    "142.80",  "up",   "+3.41%"),
+    ("MP",      "28.40",   "up",   "+6.21%"),
+    ("LMT",     "612.40",  "up",   "+0.81%"),
+    ("CEG",     "281.50",  "up",   "+1.62%"),
+    ("GEV",     "392.18",  "up",   "+2.91%"),
+    ("ANET",    "412.80",  "up",   "+1.42%"),
+    ("KTOS",    "38.20",   "up",   "+4.21%"),
+    ("WTI",     "78.42",   "up",   "+2.40%"),
+    ("URA",     "38.92",   "dn",   "-1.07%"),
+    ("DXY",     "104.28",  "dn",   "-0.17%"),
+    ("OKLO",    "42.18",   "up",   "+5.30%"),
+    ("CRWV",    "78.40",   "up",   "+5.81%"),
+    ("ETN",     "348.92",  "up",   "+1.20%"),
+    ("MU",      "118.50",  "up",   "+2.80%"),
+]
 
 st.set_page_config(
     page_title="PetroAI Capital Cycle",
@@ -38,79 +54,96 @@ inject_css()
 init_session_state()
 
 # ─── DYNAMIC STAGE BACKGROUND ─────────────────────────────────────────────────
-stage_bg_colors = {
-    "⚡ Energy":      "#150e0a",
-    "🔋 Power":       "#141200",
-    "🔌 Grid":        "#081518",
-    "💻 Compute":     "#0a0f18",
-    "🔁 Transfer":    "#081510",
-    "🤖 AI":          "#110a18",
-    "🛡️ Defense":     "#150808",
-    "🌐 Sovereignty": "#141008",
+_stage_bg = {
+    "⚡ Energy":      "#0d0a07",
+    "🔋 Power":       "#0d0d04",
+    "🔌 Grid":        "#04100d",
+    "💻 Compute":     "#050a12",
+    "🔁 Transfer":    "#050d08",
+    "🤖 AI":          "#09050d",
+    "🛡️ Defense":     "#0d0505",
+    "🌐 Sovereignty": "#0d0b04",
 }
-current_bg = stage_bg_colors.get(st.session_state.current_stage, "#0f1117")
+_current_bg = _stage_bg.get(st.session_state.current_stage, "#07090d")
 st.markdown(f"""
 <style>
 .stApp {{
-    background-color: {current_bg} !important;
+    background-color: {_current_bg} !important;
     transition: background-color 0.5s ease;
 }}
 [data-testid="stAppViewContainer"] {{
-    background-color: {current_bg} !important;
+    background-color: {_current_bg} !important;
 }}
 [data-testid="stHeader"] {{
-    background-color: {current_bg} !important;
+    background-color: {_current_bg} !important;
 }}
+.ticker::before {{ background: linear-gradient(to right, {_current_bg}, transparent) !important; }}
+.ticker::after  {{ background: linear-gradient(to left,  {_current_bg}, transparent) !important; }}
 </style>
 """, unsafe_allow_html=True)
 # ──────────────────────────────────────────────────────────────────────────────
 
-# ─── HEADER ───────────────────────────────────────────────────────────────────
-from datetime import datetime
+# ─── TERMINAL TOPBAR ──────────────────────────────────────────────────────────
+_utc_now = datetime.now(timezone.utc).strftime("%H:%M:%S")
 
-col_title, col_meta = st.columns([3, 1])
-with col_title:
-    st.markdown(
-        f"""
-        <div class="header-block">
-            <div class="header-title">⚡ PetroAI Capital Cycle</div>
-            <div class="header-thesis">{THESIS_SUMMARY}</div>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-with col_meta:
-    st.markdown(
-        f"""
-        <div class="header-meta">
-            <a href="https://twitter.com/mikalche" target="_blank" class="handle-link">@mikalche</a>
-            <div class="last-updated">Updated {datetime.now().strftime('%b %d, %Y %H:%M')}</div>
-            {"<div class='test-badge'>TEST MODE</div>" if TEST_MODE else ""}
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
+_ticker_html = " ".join(
+    f'<span class="ticker-item">'
+    f'<span class="sym">{sym}</span>'
+    f'<span class="px">{px}</span>'
+    f'<span class="{d}">{pct}</span>'
+    f'</span>'
+    for sym, px, d, pct in _TICKER_ITEMS
+)
 
-st.markdown("<hr class='header-divider'>", unsafe_allow_html=True)
+st.markdown(f"""
+<div class="topbar">
+    <div class="brand">
+        <div class="brand-mark"></div>
+        <div>
+            <div class="brand-name">PetroAI <span style="color:var(--text-3);font-weight:400">// Capital Cycle</span></div>
+            <div class="brand-sub">Institutional · v4.2.1 · Energy → Sovereignty</div>
+        </div>
+        <div class="vdiv"></div>
+        <span class="status-pill"><span class="status-dot"></span>Markets Open</span>
+    </div>
+    <div class="ticker">
+        <div class="ticker-track">
+            {_ticker_html}{_ticker_html}
+        </div>
+    </div>
+    <div class="user-cluster">
+        <span class="utc-clock">{_utc_now} UTC</span>
+        <div class="nav-meta">
+            <span>NAV <span class="nv">$2.284B</span></span>
+            <span class="sep"></span>
+            <span>Δ Today <span class="np">+1.31%</span></span>
+            <span class="sep"></span>
+            <span>YTD <span class="np">+18.42%</span></span>
+        </div>
+    </div>
+</div>
+""", unsafe_allow_html=True)
+# ──────────────────────────────────────────────────────────────────────────────
 
 # ─── SIDEBAR ──────────────────────────────────────────────────────────────────
 with st.sidebar:
-    st.markdown("### ⚙️ Dashboard Controls")
+    st.markdown("### ⚙️ Controls")
 
-    st.markdown("**Active Constraint Stage**")
-    stages = [
+    st.markdown("**Active Constraint**")
+    _stages = [
         "⚡ Energy", "🔋 Power", "🔌 Grid",
         "💻 Compute", "🔁 Transfer", "🤖 AI",
         "🛡️ Defense", "🌐 Sovereignty"
     ]
-    current = st.selectbox(
+    _current = st.selectbox(
         "Set current bottleneck",
-        stages,
-        index=stages.index(st.session_state.current_stage),
+        _stages,
+        index=_stages.index(st.session_state.current_stage),
         key="stage_selector",
+        label_visibility="collapsed",
     )
-    if current != st.session_state.current_stage:
-        st.session_state.current_stage = current
+    if _current != st.session_state.current_stage:
+        st.session_state.current_stage = _current
 
     st.markdown("---")
     st.markdown("**View Mode**")
@@ -119,18 +152,19 @@ with st.sidebar:
         ["Horizontal Flow", "Circular", "Heatmap"],
         index=0,
         key="viz_mode_radio",
+        label_visibility="collapsed",
     )
 
     st.markdown("---")
-    st.caption("Use the Portfolio tab to add or remove positions.")
+    st.caption("Add / remove positions in the Portfolio tab.")
 
 # ─── TABS ─────────────────────────────────────────────────────────────────────
 tab1, tab2, tab3, tab4, tab5 = st.tabs([
-    "🔄 Cycle Visualization",
-    "📊 Portfolio",
-    "🎯 Constraints",
-    "🔍 Deep Dive",
-    "📈 Market Overview",
+    "01  Cycle Visualization",
+    "02  Portfolio",
+    "03  Market Overview",
+    "04  Constraints",
+    "05  Deep Dive",
 ])
 
 with tab1:
@@ -140,16 +174,26 @@ with tab2:
     render_portfolio(TEST_MODE)
 
 with tab3:
-    render_constraints(TEST_MODE)
-
-with tab4:
-    render_deep_dive(TEST_MODE)
-
-with tab5:
     render_market_overview(TEST_MODE)
 
-# ─── FOOTER ───────────────────────────────────────────────────────────────────
+with tab4:
+    render_constraints(TEST_MODE)
+
+with tab5:
+    render_deep_dive(TEST_MODE)
+
+# ─── FOOTER BAR ───────────────────────────────────────────────────────────────
 st.markdown(
-    "<div class='footer'>Built by R.McCree to monitor @mikalche's PetroAI Capital Cycle Thesis • Not financial advice</div>",
+    "<div class='footer-bar'>"
+    "<div class='grp'>"
+    "<span><span class='footer-dot'></span>Stream · NYSE/NASDAQ · IEX</span>"
+    "<span>Latency 42ms</span>"
+    "<span>Quote feed · L2</span>"
+    "</div>"
+    "<div class='grp'>"
+    "<span>Engine v4.2.1</span>"
+    "<span>© PetroAI Research · @mikalche thesis · Not financial advice</span>"
+    "</div>"
+    "</div>",
     unsafe_allow_html=True,
 )
