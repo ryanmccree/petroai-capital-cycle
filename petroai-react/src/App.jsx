@@ -42,7 +42,18 @@ export default function App() {
         </div>
         <div className="grp">
           {lastUpdated && <span>Updated {lastUpdated.toLocaleTimeString()}</span>}
-          <span>Built by Ryan M. · @mikalche PetroAI Thesis · Not financial advice</span>
+          <span>
+            Thesis by{' '}
+            <a
+              href="https://x.com/mikalche"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: '#f59e0b', textDecoration: 'none' }}
+              onMouseEnter={e => e.currentTarget.style.textDecoration = 'underline'}
+              onMouseLeave={e => e.currentTarget.style.textDecoration = 'none'}
+            >@mikalche</a>{' '}
+            on X · Built by Ryan M. · Not financial advice
+          </span>
         </div>
       </div>
     </div>

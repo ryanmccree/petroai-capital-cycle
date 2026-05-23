@@ -63,6 +63,16 @@ export default function AboutTab() {
             Companies are not separate plays — they are layers in one integrated stack.
             The market constantly shifts capital to the current bottleneck forcing trillions in capex.
           </p>
+          <a
+            href="https://x.com/mikalche"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ fontFamily: 'var(--mono)', fontSize: '0.85rem', color: '#f59e0b', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6, marginTop: 4 }}
+            onMouseEnter={e => e.currentTarget.style.textDecoration = 'underline'}
+            onMouseLeave={e => e.currentTarget.style.textDecoration = 'none'}
+          >
+            𝕏 @mikalche — This thesis was created by @mikalche on X (Twitter)
+          </a>
         </div>
       </div>
 
@@ -109,7 +119,15 @@ export default function AboutTab() {
           </div>
 
           <div style={{ fontSize: 12, color: 'var(--text-3)', paddingBottom: 8 }}>
-            — <span style={{ color: '#e76f1c' }}>{THESIS_NOTE.source}</span>, {THESIS_NOTE.date}
+            —{' '}
+            <a
+              href="https://x.com/mikalche"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: '#e76f1c', textDecoration: 'none' }}
+              onMouseEnter={e => e.currentTarget.style.textDecoration = 'underline'}
+              onMouseLeave={e => e.currentTarget.style.textDecoration = 'none'}
+            >{THESIS_NOTE.source}</a>, {THESIS_NOTE.date}
           </div>
         </div>
       </div>
