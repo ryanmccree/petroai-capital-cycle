@@ -7,6 +7,7 @@ const TABS = [
   { id: 'thesis',    num: '04', label: 'Thesis Tracker' },
   { id: 'flows',     num: '05', label: 'Capital Flows' },
   { id: 'screen',    num: '06', label: 'Screener' },
+  { id: 'about',     num: '07', label: 'About' },
 ];
 
 export default function Header({ tab, setTab, tickerTape }) {

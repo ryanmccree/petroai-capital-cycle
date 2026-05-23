@@ -6,6 +6,7 @@ import MarketTab from './components/MarketTab.jsx';
 import ThesisTab from './components/ThesisTab.jsx';
 import FlowsTab from './components/FlowsTab.jsx';
 import ScreenerTab from './components/ScreenerTab.jsx';
+import AboutTab from './components/AboutTab.jsx';
 import { useMarketData } from './hooks/useMarketData.js';
 
 const SCREEN_LABELS = {
@@ -15,6 +16,7 @@ const SCREEN_LABELS = {
   thesis:    '04 Thesis Tracker',
   flows:     '05 Capital Flows',
   screen:    '06 Screener',
+  about:     '07 About',
 };
 
 export default function App() {
@@ -31,18 +33,16 @@ export default function App() {
         {tab === 'thesis'    && <ThesisTab />}
         {tab === 'flows'     && <FlowsTab />}
         {tab === 'screen'    && <ScreenerTab holdings={holdings} />}
+        {tab === 'about'     && <AboutTab />}
       </main>
 
       <div className="footer-bar">
         <div className="grp">
-          <span><span className="dot-pos" style={{ display: 'inline-block', marginRight: 6 }}></span>Stream · NYSE/NASDAQ · IEX</span>
-          <span>Latency 42ms</span>
-          <span>Quote feed · L2</span>
+          <span><span className="dot-pos" style={{ display: 'inline-block', marginRight: 6 }}></span>Engine v4.2.1 · React + Vite · Vercel</span>
         </div>
         <div className="grp">
-          <span>Engine v4.2.1</span>
           {lastUpdated && <span>Updated {lastUpdated.toLocaleTimeString()}</span>}
-          <span>© PetroAI Research</span>
+          <span>Built by Ryan M. · @mikalche PetroAI Thesis · Not financial advice</span>
         </div>
       </div>
     </div>
