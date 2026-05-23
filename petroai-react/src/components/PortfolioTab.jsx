@@ -118,9 +118,64 @@ function PortfolioCard({ h }) {
   );
 }
 
+function PortfolioTable({ holdings }) {
+  return (
+    <div style={{ overflowX: 'auto', marginTop: 12 }}>
+      <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: 'var(--mono)', fontSize: 11 }}>
+        <thead>
+          <tr style={{ background: '#1c2330', borderBottom: '1px solid var(--line-2)' }}>
+            {['Ticker', 'Name', 'Stage', 'Price', 'Day %', 'Weight', 'Cost Basis', 'Mkt Cap', 'P&L %'].map(col => (
+              <th key={col} style={{ padding: '8px 12px', textAlign: 'left', color: 'var(--text-3)', fontWeight: 500, letterSpacing: '0.08em', textTransform: 'uppercase', fontSize: 10, whiteSpace: 'nowrap' }}>{col}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {holdings.map((h, i) => {
+            const stage = STAGES.find(s => s.id === h.stage);
+            const pnl = ((h.price - h.cost) / h.cost) * 100;
+            const isUp = parseFloat(h.day) >= 0;
+            const pnlUp = pnl >= 0;
+            return (
+              <tr key={h.ticker} style={{ background: i % 2 === 0 ? '#161b27' : '#1c2330', borderBottom: '1px solid var(--line)' }}>
+                <td style={{ padding: '9px 12px', color: 'var(--text)', fontWeight: 600, letterSpacing: '0.04em' }}>{h.ticker}</td>
+                <td style={{ padding: '9px 12px', color: 'var(--text-2)', fontFamily: 'var(--sans)' }}>{h.name}</td>
+                <td style={{ padding: '9px 12px' }}>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
+                    <span style={{ width: 6, height: 6, borderRadius: '50%', background: stage.color, flexShrink: 0 }}></span>
+                    <span style={{ color: stage.color, fontSize: 10, letterSpacing: '0.06em' }}>{stage.name}</span>
+                  </span>
+                </td>
+                <td style={{ padding: '9px 12px', color: 'var(--text)', textAlign: 'right' }}>${h.price.toFixed(2)}</td>
+                <td style={{ padding: '9px 12px', color: isUp ? '#4ade80' : '#f87171', textAlign: 'right' }}>{h.day}</td>
+                <td style={{ padding: '9px 12px', color: 'var(--text-2)', textAlign: 'right' }}>{h.wgt}</td>
+                <td style={{ padding: '9px 12px', color: 'var(--text-3)', textAlign: 'right' }}>${h.cost.toFixed(2)}</td>
+                <td style={{ padding: '9px 12px', color: 'var(--text-2)', textAlign: 'right' }}>{h.mcap}</td>
+                <td style={{ padding: '9px 12px', color: pnlUp ? '#4ade80' : '#f87171', textAlign: 'right', fontWeight: 600 }}>
+                  {pnlUp ? '+' : ''}{pnl.toFixed(1)}%
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
 export default function PortfolioTab({ holdings, loading }) {
   const [filter, setFilter] = useState('all');
-  const filtered = filter === 'all' ? holdings : holdings.filter(h => h.stage === filter);
+  const [viewMode, setViewMode] = useState('cards');
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filtered = holdings.filter(h => {
+    const matchesStage = filter === 'all' || h.stage === filter;
+    const q = searchTerm.toLowerCase();
+    const matchesSearch = !q ||
+      h.ticker.toLowerCase().includes(q) ||
+      h.name.toLowerCase().includes(q) ||
+      h.stage.toLowerCase().includes(q);
+    return matchesStage && matchesSearch;
+  });
 
   return (
     <div>
@@ -164,17 +219,25 @@ export default function PortfolioTab({ holdings, loading }) {
           ))}
         </div>
         <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-          <div className="search-input">
+          <div className="search-input" style={{ cursor: 'text' }}>
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <circle cx="11" cy="11" r="7"/>
               <path d="m21 21-4.3-4.3"/>
             </svg>
-            <span>Search ticker, name, theme…</span>
-            <span className="kbd">⌘ K</span>
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={e => setSearchTerm(e.target.value)}
+              placeholder="Search ticker, name, theme…"
+              style={{ background: 'none', border: 'none', outline: 'none', color: 'var(--text)', fontFamily: 'var(--sans)', fontSize: 11, width: 180 }}
+            />
+            {searchTerm && (
+              <button onClick={() => setSearchTerm('')} style={{ color: 'var(--text-3)', fontSize: 10, lineHeight: 1 }}>✕</button>
+            )}
           </div>
           <div className="pill-group">
-            <button className="pill active">Cards</button>
-            <button className="pill">Table</button>
+            <button className={'pill' + (viewMode === 'cards' ? ' active' : '')} onClick={() => setViewMode('cards')}>Cards</button>
+            <button className={'pill' + (viewMode === 'table' ? ' active' : '')} onClick={() => setViewMode('table')}>Table</button>
           </div>
         </div>
       </div>
@@ -185,9 +248,19 @@ export default function PortfolioTab({ holdings, loading }) {
         </div>
       )}
 
-      <div className="portfolio-grid">
-        {filtered.map(h => <PortfolioCard key={h.ticker} h={h} />)}
-      </div>
+      {filtered.length === 0 && (
+        <div style={{ textAlign: 'center', padding: '40px 20px', fontFamily: 'var(--mono)', fontSize: 11, color: 'var(--text-3)', letterSpacing: '0.08em' }}>
+          NO RESULTS — clear search or change filter
+        </div>
+      )}
+
+      {viewMode === 'cards' ? (
+        <div className="portfolio-grid">
+          {filtered.map(h => <PortfolioCard key={h.ticker} h={h} />)}
+        </div>
+      ) : (
+        <PortfolioTable holdings={filtered} />
+      )}
     </div>
   );
 }

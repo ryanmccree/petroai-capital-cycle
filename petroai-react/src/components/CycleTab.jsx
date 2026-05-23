@@ -19,7 +19,7 @@ function Flywheel({ active, setActive }) {
   const angleOf = i => -Math.PI / 2 + i * angleStep;
 
   return (
-    <svg className="flywheel-svg" viewBox="0 0 640 640" preserveAspectRatio="xMidYMid meet">
+    <svg className="flywheel-svg" viewBox="-40 0 720 640" preserveAspectRatio="xMidYMid meet" style={{ overflow: 'visible' }}>
       <defs>
         {STAGES.map(s => (
           <radialGradient id={`g-${s.id}`} key={s.id} cx="50%" cy="50%" r="50%">

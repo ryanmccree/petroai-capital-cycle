@@ -3,7 +3,19 @@ import Header from './components/Header.jsx';
 import CycleTab from './components/CycleTab.jsx';
 import PortfolioTab from './components/PortfolioTab.jsx';
 import MarketTab from './components/MarketTab.jsx';
+import ThesisTab from './components/ThesisTab.jsx';
+import FlowsTab from './components/FlowsTab.jsx';
+import ScreenerTab from './components/ScreenerTab.jsx';
 import { useMarketData } from './hooks/useMarketData.js';
+
+const SCREEN_LABELS = {
+  cycle:     '01 Cycle Visualization',
+  portfolio: '02 Portfolio',
+  market:    '03 Market Overview',
+  thesis:    '04 Thesis Tracker',
+  flows:     '05 Capital Flows',
+  screen:    '06 Screener',
+};
 
 export default function App() {
   const [tab, setTab] = useState('cycle');
@@ -12,17 +24,13 @@ export default function App() {
   return (
     <div className="app">
       <Header tab={tab} setTab={setTab} tickerTape={tickerTape} />
-      <main
-        className="main"
-        data-screen-label={
-          tab === 'cycle' ? '01 Cycle Visualization' :
-          tab === 'portfolio' ? '02 Portfolio' :
-          '03 Market Overview'
-        }
-      >
+      <main className="main" data-screen-label={SCREEN_LABELS[tab]}>
         {tab === 'cycle'     && <CycleTab holdings={holdings} />}
         {tab === 'portfolio' && <PortfolioTab holdings={holdings} loading={loading} />}
         {tab === 'market'    && <MarketTab heatmap={heatmap} holdings={holdings} />}
+        {tab === 'thesis'    && <ThesisTab />}
+        {tab === 'flows'     && <FlowsTab />}
+        {tab === 'screen'    && <ScreenerTab holdings={holdings} />}
       </main>
 
       <div className="footer-bar">
