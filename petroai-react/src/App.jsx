@@ -20,7 +20,7 @@ const SCREEN_LABELS = {
 };
 
 export default function App() {
-  const [tab, setTab] = useState('cycle');
+  const [tab, setTab] = useState('about');
   const { holdings, tickerTape, heatmap, loading, lastUpdated } = useMarketData();
 
   return (

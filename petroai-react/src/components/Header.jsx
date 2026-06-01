@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 
 const TABS = [
+  { id: 'about',     num: '00', label: 'About' },
   { id: 'cycle',     num: '01', label: 'Cycle Visualization' },
   { id: 'portfolio', num: '02', label: 'Portfolio' },
   { id: 'market',    num: '03', label: 'Market Overview' },
   { id: 'thesis',    num: '04', label: 'Thesis Tracker' },
   { id: 'flows',     num: '05', label: 'Capital Flows' },
   { id: 'screen',    num: '06', label: 'Screener' },
-  { id: 'about',     num: '07', label: 'About' },
 ];
 
 export default function Header({ tab, setTab, tickerTape }) {
