@@ -1,0 +1,8 @@
+{
+  "installCommand": "cd petroai-react && npm install",
+  "buildCommand": "cd petroai-react && npm run build",
+  "outputDirectory": "petroai-react/dist",
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/$1" }
+  ]
+}
