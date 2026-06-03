@@ -1,31 +1,26 @@
-import { STAGES, HOLDINGS, THESIS_NOTE } from '../data/staticData.js';
-
-const TIER_COLORS = ['#e76f1c', '#3b82f6', '#a855f7'];
+import { STAGES, HOLDINGS, THESIS_NOTE, THESIS_NOTE_2, NVDA_TIERS } from '../data/staticData.js';
 
 const WHY_MATTERS = {
   energy:      'The base of every AI factory is power, and power starts here. Hydrocarbons and uranium define the input cost of compute. Tight upstream supply creates structural scarcity that flows through every layer of the stack.',
   power:       'Electricity is the currency of AI. Every GPU rack requires continuous, reliable power — nuclear and gas generation provide the baseload that intermittent renewables cannot. Data center PPAs are becoming the dominant power contract vehicle.',
   grid:        'The bottleneck between generation and consumption. Transformer lead times of 142+ weeks mean grid infrastructure constrains AI factory buildout more than silicon. Interconnection reform is the critical regulatory catalyst.',
-  compute:     'The AI factory floor. NVIDIA\'s $145B supply commitment signals that demand is structural, not cyclical. HBM memory, advanced packaging, and custom silicon (ARM, AMKR) are the adjacent plays as GPU supply loosens.',
+  compute:     "The AI factory floor. NVIDIA's $145B supply commitment signals that demand is structural, not cyclical. HBM memory, advanced packaging, and custom silicon (ARM, AMKR) are the adjacent plays as GPU supply loosens.",
   transfer:    'Networking is the fastest-growing bottleneck inside the AI factory. NVDA Spectrum-X networking revenue tripled YoY. Optical transceivers, 800G Ethernet, and accelerated storage are the picks-and-shovels of the inference era.',
   ai:          'The monetization layer. Frontier model spend is tracking $312B for FY26 across hyperscalers. Inference economics are inflecting — cost per token falling rapidly creates demand elasticity that drives volume expansion across the stack.',
   defense:     'AI and autonomy are restructuring how nations project power. Replicator initiative, autonomous undersea vehicles, and ISR platforms represent multi-year procurement uplift with bipartisan budget support.',
   sovereignty: 'The chokepoint in the supply chain. Rare earth elements — neodymium, praseodymium, dysprosium — are critical inputs for motors, magnets, and defense systems. Ex-China supply is structurally undersupplied vs. AI-era demand.',
 };
 
-function StagePill({ color, name }) {
+function MikalLink({ text }) {
   return (
-    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, padding: '2px 8px', borderRadius: 2, background: color + '20', border: `1px solid ${color}44`, fontFamily: 'var(--mono)', fontSize: 10, color, letterSpacing: '0.06em' }}>
-      {name}
-    </span>
-  );
-}
-
-function TickerPill({ ticker, color }) {
-  return (
-    <span style={{ display: 'inline-block', padding: '3px 10px', borderRadius: 2, background: color + '18', border: `1px solid ${color}55`, fontFamily: 'var(--mono)', fontSize: 11, fontWeight: 600, color, letterSpacing: '0.06em' }}>
-      {ticker}
-    </span>
+    <a
+      href="https://x.com/mikalche"
+      target="_blank"
+      rel="noopener noreferrer"
+      style={{ color: '#f59e0b', textDecoration: 'none' }}
+      onMouseEnter={e => e.currentTarget.style.textDecoration = 'underline'}
+      onMouseLeave={e => e.currentTarget.style.textDecoration = 'none'}
+    >{text || '@mikalche'}</a>
   );
 }
 
@@ -76,7 +71,7 @@ export default function AboutTab() {
         </div>
       </div>
 
-      {/* ── SECTION 2: AI Factory Framework ── */}
+      {/* ── SECTION 2: THESIS_NOTE — AI Factory Framework ── */}
       <div className="panel">
         <div className="panel-head">
           <span className="panel-title">The AI Factory Framework</span>
@@ -85,7 +80,6 @@ export default function AboutTab() {
             <span className="chip">{THESIS_NOTE.date}</span>
           </span>
         </div>
-
         <div style={{ padding: '24px 24px 8px' }}>
           <div style={{ fontSize: 20, fontWeight: 600, lineHeight: 1.35, color: 'var(--text)', marginBottom: 20, letterSpacing: '-0.02em' }}>
             {THESIS_NOTE.headline}
@@ -93,77 +87,119 @@ export default function AboutTab() {
           <p style={{ fontSize: 14, lineHeight: 1.75, color: 'var(--text-2)', marginBottom: 24 }}>
             {THESIS_NOTE.body}
           </p>
-
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14, marginBottom: 24 }}>
-            {THESIS_NOTE.tiers.map((tier, i) => (
-              <div key={i} style={{ padding: '16px 18px', background: 'var(--panel-2)', border: `1px solid ${TIER_COLORS[i]}44`, borderTop: `3px solid ${TIER_COLORS[i]}`, borderRadius: 4 }}>
-                <div style={{ fontFamily: 'var(--mono)', fontSize: 10, color: TIER_COLORS[i], letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>
-                  {tier.label}
+            {THESIS_NOTE.tiers.map((tier, i) => {
+              const tierColors = ['#e76f1c', '#3b82f6', '#a855f7'];
+              const col = tierColors[i];
+              return (
+                <div key={i} style={{ padding: '16px 18px', background: 'var(--panel-2)', border: `1px solid ${col}44`, borderTop: `3px solid ${col}`, borderRadius: 4 }}>
+                  <div style={{ fontFamily: 'var(--mono)', fontSize: 10, color: col, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 10 }}>{tier.label}</div>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 10 }}>
+                    {tier.tickers.map(t => (
+                      <span key={t} style={{ display: 'inline-block', padding: '3px 10px', borderRadius: 2, background: col + '18', border: `1px solid ${col}55`, fontFamily: 'var(--mono)', fontSize: 11, fontWeight: 600, color: col, letterSpacing: '0.06em' }}>{t}</span>
+                    ))}
+                  </div>
+                  <div style={{ fontSize: 12, color: 'var(--text-3)', lineHeight: 1.5 }}>{tier.desc}</div>
                 </div>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 10 }}>
-                  {tier.tickers.map(t => <TickerPill key={t} ticker={t} color={TIER_COLORS[i]} />)}
-                </div>
-                <div style={{ fontSize: 12, color: 'var(--text-3)', lineHeight: 1.5 }}>{tier.desc}</div>
-              </div>
-            ))}
+              );
+            })}
           </div>
-
           <div style={{ padding: '16px 20px', background: 'var(--panel-3)', borderRadius: 4, marginBottom: 16 }}>
             <p style={{ margin: 0, fontSize: 14, fontStyle: 'italic', lineHeight: 1.7, color: 'var(--text-2)' }}>
               "{THESIS_NOTE.conclusion}"
             </p>
           </div>
-
-          <div style={{ fontFamily: 'var(--mono)', fontSize: 11, color: 'var(--text-3)', marginBottom: 16 }}>
-            {THESIS_NOTE.framework}
-          </div>
-
+          <div style={{ fontFamily: 'var(--mono)', fontSize: 11, color: 'var(--text-3)', marginBottom: 16 }}>{THESIS_NOTE.framework}</div>
           <div style={{ fontSize: 12, color: 'var(--text-3)', paddingBottom: 8 }}>
-            —{' '}
-            <a
-              href="https://x.com/mikalche"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ color: '#e76f1c', textDecoration: 'none' }}
-              onMouseEnter={e => e.currentTarget.style.textDecoration = 'underline'}
-              onMouseLeave={e => e.currentTarget.style.textDecoration = 'none'}
-            >{THESIS_NOTE.source}</a>, {THESIS_NOTE.date}
+            — <MikalLink />, {THESIS_NOTE.date}
           </div>
         </div>
       </div>
 
-      {/* ── SECTION 3: How to read the dashboard ── */}
+      {/* ── SECTION 3: THESIS_NOTE_2 — Jensen Lights the Fuse ── */}
+      <div className="panel">
+        <div className="panel-head">
+          <span className="panel-title">{THESIS_NOTE_2.title}</span>
+          <span className="panel-actions">
+            <span className="chip">{THESIS_NOTE_2.source}</span>
+            <span className="chip">{THESIS_NOTE_2.date}</span>
+          </span>
+        </div>
+        <div style={{ padding: '24px 24px 8px' }}>
+          <div style={{ fontSize: 16, fontWeight: 700, lineHeight: 1.35, color: '#f59e0b', marginBottom: 16, letterSpacing: '-0.01em' }}>
+            {THESIS_NOTE_2.headline}
+          </div>
+          <p style={{ fontSize: 14, lineHeight: 1.75, color: 'var(--text-2)', marginBottom: 20 }}>
+            {THESIS_NOTE_2.body}
+          </p>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 16, marginBottom: 20 }}>
+            <div style={{ background: 'var(--panel-2)', border: '1px solid #4ade8033', borderTop: '3px solid #4ade80', borderRadius: 4, padding: '16px 18px' }}>
+              <div style={{ fontFamily: 'var(--mono)', fontSize: 10, color: '#4ade80', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 12 }}>AI Factory Chain — Winners</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                {THESIS_NOTE_2.chain.map(item => (
+                  <div key={item.ticker} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+                    <span style={{ fontFamily: 'var(--mono)', fontSize: 10, fontWeight: 700, color: '#4ade80', background: '#4ade8018', border: '1px solid #4ade8044', padding: '2px 8px', borderRadius: 2, flexShrink: 0, minWidth: 52, textAlign: 'center' }}>{item.ticker}</span>
+                    <span style={{ fontSize: 11, color: 'var(--text-3)', lineHeight: 1.5 }}>{item.note}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div style={{ background: 'var(--panel-2)', border: '1px solid #f8717133', borderTop: '3px solid #f87171', borderRadius: 4, padding: '16px 18px' }}>
+              <div style={{ fontFamily: 'var(--mono)', fontSize: 10, color: '#f87171', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 12 }}>Rotation Out — Watch</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+                {THESIS_NOTE_2.losers.map(item => (
+                  <div key={item.ticker} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
+                    <span style={{ fontFamily: 'var(--mono)', fontSize: 10, fontWeight: 700, color: '#f87171', background: '#f8717118', border: '1px solid #f8717144', padding: '2px 8px', borderRadius: 2, flexShrink: 0, minWidth: 52, textAlign: 'center' }}>{item.ticker}</span>
+                    <span style={{ fontSize: 11, color: 'var(--text-3)', lineHeight: 1.5 }}>{item.note}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 6, marginBottom: 20 }}>
+            <span style={{ fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--text-3)', letterSpacing: '0.08em', marginRight: 4 }}>STACK:</span>
+            {THESIS_NOTE_2.stackOrder.map((layer, i) => (
+              <span key={layer} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                <span style={{ fontFamily: 'var(--mono)', fontSize: 10, color: '#f59e0b', background: '#f59e0b18', border: '1px solid #f59e0b44', padding: '3px 10px', borderRadius: 2, letterSpacing: '0.06em' }}>{layer}</span>
+                {i < THESIS_NOTE_2.stackOrder.length - 1 && <span style={{ color: 'var(--text-4)', fontSize: 10 }}>→</span>}
+              </span>
+            ))}
+          </div>
+
+          <div style={{ padding: '14px 18px', background: 'var(--panel-3)', borderRadius: 4, marginBottom: 12 }}>
+            <p style={{ margin: 0, fontSize: 13, fontStyle: 'italic', lineHeight: 1.7, color: 'var(--text-2)' }}>
+              "{THESIS_NOTE_2.conclusion}"
+            </p>
+          </div>
+          <div style={{ fontSize: 12, color: 'var(--text-3)', paddingBottom: 8 }}>
+            — <MikalLink />, {THESIS_NOTE_2.date}
+          </div>
+        </div>
+      </div>
+
+      {/* ── SECTION 4: NVDA_TIERS ── */}
       <div>
         <div style={{ fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--text-3)', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 12 }}>
-          How to read this dashboard
+          NVDA Tier Classification
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14 }}>
-          {[
-            {
-              num: '01', label: 'Cycle Visualization', color: '#e76f1c',
-              desc: 'The flywheel diagram shows all 8 stages of the capital cycle. Click any node or stage cell to drill into that theme — see allocation, capital flow index, top holdings, and the key catalyst for the next 30 days. The left rail shows the full thesis sequence; hover to switch focus.',
-            },
-            {
-              num: '02', label: 'Portfolio', color: '#3b82f6',
-              desc: 'Holdings cards show each position with live price, daily return, weight, and cost basis. Filter by stage using the pill buttons, search by ticker, name, or theme. Toggle to Table view for a sortable spreadsheet layout with P&L% for each position.',
-            },
-            {
-              num: '03', label: 'Market Overview', color: '#a855f7',
-              desc: 'Index strip shows PETROAI-100 vs major benchmarks with sparklines. The cycle heatmap shows intraday moves for all tracked names, color-coded by stage. Capital flow bars show rotation intensity. Movers, signals, and newsflow on the right.',
-            },
-          ].map(card => (
-            <div key={card.num} style={{ padding: '20px 20px', background: 'var(--panel)', border: '1px solid var(--line)', borderTop: `3px solid ${card.color}`, borderRadius: 4 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
-                <span style={{ fontFamily: 'var(--mono)', fontSize: 10, color: card.color, letterSpacing: '0.1em' }}>{card.num}</span>
-                <span style={{ fontWeight: 600, fontSize: 14, color: 'var(--text)' }}>{card.label}</span>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14 }}>
+          {Object.entries(NVDA_TIERS).map(([key, tier]) => (
+            <div key={key} style={{ padding: '18px 20px', background: 'var(--panel)', border: `1px solid ${tier.color}33`, borderLeft: `3px solid ${tier.color}`, borderRadius: 4 }}>
+              <div style={{ fontFamily: 'var(--mono)', fontSize: 10, color: tier.color, letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>{tier.label}</div>
+              <div style={{ fontSize: 12, color: 'var(--text-3)', marginBottom: 12 }}>{tier.desc}</div>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                {tier.tickers.map(t => (
+                  <span key={t} style={{ fontFamily: 'var(--mono)', fontSize: 11, fontWeight: 600, color: tier.color, background: tier.color + '18', border: `1px solid ${tier.color}44`, padding: '3px 10px', borderRadius: 2, letterSpacing: '0.06em' }}>{t}</span>
+                ))}
               </div>
-              <p style={{ margin: 0, fontSize: 13, lineHeight: 1.65, color: 'var(--text-2)' }}>{card.desc}</p>
             </div>
           ))}
         </div>
       </div>
 
-      {/* ── SECTION 4: The 8 Stages ── */}
+      {/* ── SECTION 5: The 8 Stages ── */}
       <div>
         <div style={{ fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--text-3)', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 12 }}>
           The 8 Stages of the Capital Cycle
@@ -192,11 +228,46 @@ export default function AboutTab() {
         </div>
       </div>
 
-      {/* ── SECTION 5: Credits ── */}
+      {/* ── SECTION 6: How to Read the Dashboard ── */}
+      <div>
+        <div style={{ fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--text-3)', letterSpacing: '0.14em', textTransform: 'uppercase', marginBottom: 12 }}>
+          How to read this dashboard
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14 }}>
+          {[
+            {
+              num: '00', label: 'About', color: '#f59e0b',
+              desc: 'This page. Thesis context, the full AI Factory Framework from @mikalche, NVDA tier classification, stage reference, and dashboard navigation guide.',
+            },
+            {
+              num: '01', label: 'Cycle Visualization', color: '#e76f1c',
+              desc: 'The flywheel diagram shows all 8 stages of the capital cycle. Click any node or stage cell to drill into that theme — see allocation, capital flow index, top holdings, and the key catalyst.',
+            },
+            {
+              num: '02', label: 'Portfolio', color: '#3b82f6',
+              desc: 'Holdings cards show each position with live price, daily return, weight, and cost basis. Filter by stage, search by ticker, name, or theme. Toggle to Table view for a sortable spreadsheet layout.',
+            },
+            {
+              num: '03', label: 'Market Overview', color: '#a855f7',
+              desc: 'Index strip shows PETROAI-100 vs major benchmarks. The cycle heatmap shows intraday moves for all tracked names, color-coded by stage. Capital flow bars show rotation intensity.',
+            },
+          ].map(card => (
+            <div key={card.num} style={{ padding: '20px 20px', background: 'var(--panel)', border: '1px solid var(--line)', borderTop: `3px solid ${card.color}`, borderRadius: 4 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 12 }}>
+                <span style={{ fontFamily: 'var(--mono)', fontSize: 10, color: card.color, letterSpacing: '0.1em' }}>{card.num}</span>
+                <span style={{ fontWeight: 600, fontSize: 14, color: 'var(--text)' }}>{card.label}</span>
+              </div>
+              <p style={{ margin: 0, fontSize: 13, lineHeight: 1.65, color: 'var(--text-2)' }}>{card.desc}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── SECTION 7: Credits ── */}
       <div style={{ padding: '28px 20px', textAlign: 'center', borderTop: '1px solid var(--line)', marginTop: 8 }}>
         <div style={{ fontSize: 13, color: 'var(--text-2)', marginBottom: 8 }}>
           Built by <span style={{ color: 'var(--text)', fontWeight: 500 }}>Ryan M.</span> to monitor{' '}
-          <span style={{ color: '#e76f1c', fontWeight: 500 }}>@mikalche</span>'s PetroAI Capital Cycle Thesis
+          <MikalLink />'s PetroAI Capital Cycle Thesis
         </div>
         <div style={{ fontFamily: 'var(--mono)', fontSize: 10, color: 'var(--text-3)', letterSpacing: '0.08em', display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
           <span>Not financial advice</span>

@@ -1,5 +1,15 @@
 import { useState } from 'react';
-import { STAGES } from '../data/staticData.js';
+import { STAGES, NVDA_TIERS } from '../data/staticData.js';
+
+function getTierInfo(ticker) {
+  for (const [key, tier] of Object.entries(NVDA_TIERS)) {
+    if (tier.tickers.includes(ticker)) {
+      const label = key === 'tier1' ? 'T1 ★' : key === 'tier2' ? 'T2' : key === 'tier3' ? 'T3' : '✓';
+      return { key, label, color: tier.color };
+    }
+  }
+  return null;
+}
 
 function bgFor(kind, color) {
   const c = color;
@@ -92,6 +102,47 @@ function bgFor(kind, color) {
           ${Array.from({ length: 9 }).map((_, i) => { const x = 40 + i * 32; const h = 60 + ((i * 37) % 80); return `<rect x='${x}' y='${240 - h}' width='20' height='${h}' fill='${c}' opacity='${0.18 + (i % 3) * 0.12}'/>`;}).join('')}
         </g>
       </svg>`,
+    networking: `
+      <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 240' preserveAspectRatio='xMidYMid slice'>
+        <rect width='320' height='240' fill='${dim}'/>
+        <g stroke='${c}' stroke-width='0.5' opacity='0.4' fill='none'>
+          ${[
+            [60,60],[160,40],[260,80],[80,140],[200,160],[140,210],[300,130]
+          ].flatMap(([x1,y1],i,pts) => pts.slice(i+1).map(([x2,y2]) => `<line x1='${x1}' y1='${y1}' x2='${x2}' y2='${y2}' opacity='${0.2 + (i % 3) * 0.1}'/>`)).join('')}
+        </g>
+        <g fill='${c}'>
+          ${[[60,60],[160,40],[260,80],[80,140],[200,160],[140,210],[300,130]].map(([x,y]) => `<circle cx='${x}' cy='${y}' r='4'/>`).join('')}
+        </g>
+      </svg>`,
+    optics: `
+      <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 240' preserveAspectRatio='xMidYMid slice'>
+        <rect width='320' height='240' fill='${dim}'/>
+        <defs>
+          <linearGradient id='op-${c.slice(1)}' x1='0%' y1='0%' x2='100%' y2='0%'>
+            <stop offset='0%' stop-color='${c}' stop-opacity='0'/>
+            <stop offset='50%' stop-color='${c}' stop-opacity='0.6'/>
+            <stop offset='100%' stop-color='${c}' stop-opacity='0'/>
+          </linearGradient>
+        </defs>
+        ${Array.from({ length: 8 }).map((_, i) => `<line x1='0' y1='${20 + i * 28}' x2='320' y2='${30 + i * 28}' stroke='url(#op-${c.slice(1)})' stroke-width='${1 + (i % 3) * 0.4}'/>`).join('')}
+        <circle cx='160' cy='120' r='18' fill='${c}' opacity='0.25'/>
+        <circle cx='160' cy='120' r='6' fill='${c}' opacity='0.7'/>
+      </svg>`,
+    power: `
+      <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 240' preserveAspectRatio='xMidYMid slice'>
+        <rect width='320' height='240' fill='${dim}'/>
+        <defs>
+          <radialGradient id='pw-${c.slice(1)}' cx='50%' cy='60%' r='50%'>
+            <stop offset='0%' stop-color='${c}' stop-opacity='0.35'/>
+            <stop offset='100%' stop-color='${c}' stop-opacity='0'/>
+          </radialGradient>
+        </defs>
+        <rect width='320' height='240' fill='url(#pw-${c.slice(1)})'/>
+        <g stroke='${c}' stroke-width='0.5' opacity='0.45' fill='none'>
+          ${Array.from({ length: 6 }).map((_, i) => `<rect x='${30 + i * 46}' y='80' width='30' height='${60 + (i%2)*20}' rx='2'/>`).join('')}
+        </g>
+        <line x1='0' y1='80' x2='320' y2='80' stroke='${c}' stroke-width='0.6' opacity='0.3'/>
+      </svg>`,
   };
   const svg = patterns[kind] || patterns.grid;
   return `url("data:image/svg+xml;utf8,${encodeURIComponent(svg)}")`;
@@ -100,10 +151,16 @@ function bgFor(kind, color) {
 function PortfolioCard({ h }) {
   const stage = STAGES.find(s => s.id === h.stage);
   const isUp = parseFloat(h.day) >= 0;
+  const tier = getTierInfo(h.ticker);
   return (
     <div className="pcard" style={{ '--stage-color': stage.color }}>
       <div className="pcard-bg" style={{ backgroundImage: bgFor(h.img, stage.color) }}></div>
       <span className="pcard-stage">{stage.name}</span>
+      {tier && (
+        <span style={{ position: 'absolute', top: 28, left: 10, fontFamily: 'var(--mono)', fontSize: 9, fontWeight: 700, color: tier.color, background: tier.color + '22', border: `1px solid ${tier.color}55`, padding: '2px 6px', borderRadius: 2, letterSpacing: '0.06em' }}>
+          {tier.label}
+        </span>
+      )}
       <span className={'pcard-pct ' + (isUp ? 'up' : 'down')}>{h.day}</span>
       <div className="pcard-body">
         <div className="pcard-ticker">{h.ticker} · {h.mcap}</div>
